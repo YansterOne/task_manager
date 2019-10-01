@@ -2,7 +2,9 @@
 
 namespace Core\Project;
 
+use Core\Project\Requests\Create;
+
 abstract class AbstractProjectService
 {
-    abstract public function createProject(string $name): Project;
+    abstract public function createProject(Create $request): Project;
 }

@@ -2,6 +2,8 @@
 
 namespace Core\Project;
 
+use Core\Project\Requests\Create;
+
 class ProjectService extends AbstractProjectService
 {
     private $projectRepository;
@@ -11,8 +13,8 @@ class ProjectService extends AbstractProjectService
         $this->projectRepository = $projectRepository;
     }
 
-    public function createProject(string $name): Project
+    public function createProject(Create $request): Project
     {
-        return $this->projectRepository->create(['name' => $name]);
+        return $this->projectRepository->create(['name' => $request->getName()]);
     }
 }
