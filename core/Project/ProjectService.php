@@ -3,7 +3,9 @@
 namespace Core\Project;
 
 use Core\Project\Requests\CreateProjectRequest;
+use Core\Project\Requests\GetProjectsRequest;
 use Core\Project\Responses\CreateProjectResponse;
+use Core\Project\Responses\GetProjectsResponse;
 
 class ProjectService extends AbstractProjectService
 {
@@ -22,5 +24,11 @@ class ProjectService extends AbstractProjectService
         $id = $this->projectRepository->create($project);
         $project->setId($id);
         $response->setProject($project);
+    }
+
+    public function getProjects(GetProjectsResponse $response)
+    {
+        $projects = $this->projectRepository->get();
+        $response->setProjects($projects);
     }
 }

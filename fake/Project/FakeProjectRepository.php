@@ -24,4 +24,9 @@ class FakeProjectRepository implements ProjectRepository
         $this->projects[$id] = $project;
         return $id;
     }
+
+    public function get(): array
+    {
+        return $this->projects;
+    }
 }
