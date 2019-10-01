@@ -4,5 +4,5 @@ namespace Core\Project;
 
 interface ProjectRepository
 {
-    public function create(array $params): Project;
+    public function create(Project $project): int;
 }

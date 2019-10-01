@@ -3,25 +3,25 @@
 namespace Fake\Project;
 
 use Core\Project\Project;
-use Core\Project\ProjectFactory;
 use Core\Project\ProjectRepository;
 
 class FakeProjectRepository implements ProjectRepository
 {
     private $id = 0;
-    private $projectFactory;
     private $projects = [];
 
-    public function __construct(ProjectFactory $projectFactory)
+    public function __construct(array $projects = [])
     {
-        $this->projectFactory = $projectFactory;
+        foreach ($projects as $project) {
+            $id = ++$this->id;
+            $this->projects[$id] = $project;
+        }
     }
 
-    public function create(array $params): Project
+    public function create(Project $project): int
     {
-        $this->id++;
-        $project = $this->projectFactory->create($this->id, $params['name']);
-        array_push($this->projects, $project);
-        return $project;
+        $id = ++$this->id;
+        $this->projects[$id] = $project;
+        return $id;
     }
 }

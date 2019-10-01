@@ -2,19 +2,25 @@
 
 namespace Core\Project;
 
-use Core\Project\Requests\Create;
+use Core\Project\Requests\CreateProjectRequest;
+use Core\Project\Responses\CreateProjectResponse;
 
 class ProjectService extends AbstractProjectService
 {
     private $projectRepository;
+    private $projectFactory;
 
-    public function __construct(ProjectRepository $projectRepository)
+    public function __construct(ProjectRepository $projectRepository, ProjectFactory $projectFactory)
     {
         $this->projectRepository = $projectRepository;
+        $this->projectFactory = $projectFactory;
     }
 
-    public function createProject(Create $request): Project
+    public function createProject(CreateProjectRequest $request, CreateProjectResponse $response)
     {
-        return $this->projectRepository->create(['name' => $request->getName()]);
+        $project = $this->projectFactory->create($request->getName());
+        $id = $this->projectRepository->create($project);
+        $project->setId($id);
+        $response->setProject($project);
     }
 }

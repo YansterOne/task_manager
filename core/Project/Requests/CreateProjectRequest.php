@@ -2,7 +2,7 @@
 
 namespace Core\Project\Requests;
 
-interface Create
+interface CreateProjectRequest
 {
     public function getName(): string;
 }

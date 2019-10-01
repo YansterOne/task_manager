@@ -6,28 +6,21 @@ use Core\Project\Project;
 use Core\Project\ProjectService;
 use Fake\Project\FakeProjectFactory;
 use Fake\Project\FakeProjectRepository;
-use Fake\Project\Requests\FakeCreate;
+use Fake\Project\Requests\FakeCreateProjectRequest;
+use Fake\Project\Responses\FakeCreateProjectResponse;
 use Faker\Provider\Lorem;
 use Tests\TestCase;
 
 class ProjectServiceTest extends TestCase
 {
-    private $projectService;
-
-    protected function setUp(): void
-    {
-        $projectRepository = new FakeProjectRepository(new FakeProjectFactory());
-        $this->projectService = new ProjectService($projectRepository);
-    }
-
-    /**
-     * A basic unit test example.
-     *
-     * @return void
-     */
     public function testCreateProject()
     {
-        $project = $this->projectService->createProject(new FakeCreate());
-        $this->assertNotEmpty($project);
+        $projectRepository = new FakeProjectRepository();
+        $projectFactory = new FakeProjectFactory();
+        $projectService = new ProjectService($projectRepository, $projectFactory);
+        $request = new FakeCreateProjectRequest(Lorem::words(rand(1, 10), true));
+        $response = new FakeCreateProjectResponse();
+        $projectService->createProject($request, $response);
+        $this->assertNotEmpty($response->getProject());
     }
 }

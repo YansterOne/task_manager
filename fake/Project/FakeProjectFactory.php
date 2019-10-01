@@ -7,8 +7,8 @@ use Core\Project\ProjectFactory;
 
 class FakeProjectFactory implements ProjectFactory
 {
-    public function create(int $id, string $name): Project
+    public function create(string $name): Project
     {
-        return new Project($id, $name);
+        return new Project($name);
     }
 }
