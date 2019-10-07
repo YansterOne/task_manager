@@ -6,7 +6,7 @@ use Core\User\Exceptions\PasswordNotMatchException;
 use Core\User\Requests\LoginUserRequest;
 use Core\User\Responses\LoginUserResponse;
 
-class UserService extends AbstractUserService
+class UserService
 {
     private $userRepository;
     private $userFactory;

@@ -7,7 +7,7 @@ use Core\Project\Requests\GetProjectsRequest;
 use Core\Project\Responses\CreateProjectResponse;
 use Core\Project\Responses\GetProjectsResponse;
 
-class ProjectService extends AbstractProjectService
+class ProjectService
 {
     private $projectRepository;
     private $projectFactory;
