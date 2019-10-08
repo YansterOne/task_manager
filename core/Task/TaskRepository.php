@@ -9,4 +9,6 @@ interface TaskRepository
     public function getById(int $taskID): ?Task;
 
     public function update(Task $task);
+
+    public function delete(Task $task);
 }

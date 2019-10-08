@@ -38,4 +38,9 @@ class FakeTaskRepository implements TaskRepository
     {
         $this->tasks[$task->getId()] = $task;
     }
+
+    public function delete(Task $task)
+    {
+        unset($this->tasks[$task->getId()]);
+    }
 }

@@ -10,6 +10,7 @@ use Core\Task\TaskService;
 use Core\User\UserFactory;
 use Fake\Project\FakeProjectRepository;
 use Fake\Task\Requests\FakeAddTaskRequest;
+use Fake\Task\Requests\FakeDeleteTaskRequest;
 use Fake\Task\Requests\FakeUpdateTaskRequest;
 use Fake\Task\Responses\FakeAddTaskResponse;
 use Fake\Task\FakeTaskRepository;
@@ -123,5 +124,62 @@ class TaskServiceTest extends TestCase
 
         $service = new TaskService($repository, $factory, $userRepository, $projectRepository);
         $service->updateTask($request, $response);
+    }
+
+    public function testDeleteTaskSuccess()
+    {
+        $user = (new UserFactory())->create($this->faker->userName, $this->faker->password);
+        $userRepository = new FakeUserRepository();
+        $userID = $userRepository->create($user);
+        $user->setId($userID);
+
+        $project = (new ProjectFactory())->create($this->faker->word, $user);
+        $projectRepository = new FakeProjectRepository();
+        $projectID = $projectRepository->create($project);
+        $project->setId($projectID);
+
+        $factory = new TaskFactory();
+        $repository = new FakeTaskRepository();
+
+        $task = $factory->create($this->faker->words(5, true), Task::UNDONE_STATUS, 0, $project, $user);
+        $taskID = $repository->create($task);
+        $task->setId($taskID);
+
+        $request = new FakeDeleteTaskRequest($taskID, $userID);
+
+        $service = new TaskService($repository, $factory, $userRepository, $projectRepository);
+        $service->deleteTask($request);
+        $this->assertEmpty($repository->getById($taskID));
+    }
+
+    public function testDeleteTaskFailNotAccess()
+    {
+        $this->expectException(AccessDeniedException::class);
+        $userRepository = new FakeUserRepository();
+
+        $user = (new UserFactory())->create($this->faker->userName, $this->faker->password);
+        $userID = $userRepository->create($user);
+        $user->setId($userID);
+
+        $user2 = (new UserFactory())->create($this->faker->userName, $this->faker->password);
+        $userID2 = $userRepository->create($user2);
+        $user2->setId($userID2);
+
+        $project = (new ProjectFactory())->create($this->faker->word, $user2);
+        $projectRepository = new FakeProjectRepository();
+        $projectID = $projectRepository->create($project);
+        $project->setId($projectID);
+
+        $factory = new TaskFactory();
+        $repository = new FakeTaskRepository();
+
+        $task = $factory->create($this->faker->words(5, true), Task::UNDONE_STATUS, 0, $project, $user2);
+        $taskID = $repository->create($task);
+        $task->setId($taskID);
+
+        $request = new FakeDeleteTaskRequest($taskID, $userID);
+
+        $service = new TaskService($repository, $factory, $userRepository, $projectRepository);
+        $service->deleteTask($request);
     }
 }

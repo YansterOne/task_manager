@@ -5,6 +5,7 @@ namespace Core\Task;
 use Core\Project\Exceptions\AccessDeniedException;
 use Core\Project\ProjectRepository;
 use Core\Task\Requests\AddTaskRequest;
+use Core\Task\Requests\DeleteTaskRequest;
 use Core\Task\Requests\UpdateTaskRequest;
 use Core\Task\Responses\AddTaskResponse;
 use Core\Task\Responses\UpdateTaskResponse;
@@ -78,5 +79,15 @@ class TaskService
         $task->setName($request->getName())->setPriority($request->getPriority())->setStatus($request->getStatus());
         $this->taskRepository->update($task);
         $response->setTask($task);
+    }
+
+    public function deleteTask(DeleteTaskRequest $request)
+    {
+        $user = $this->userRepository->getByID($request->getAuthUserID());
+        $task = $this->taskRepository->getById($request->getTaskID());
+        if (!$task->hasPermissions($user)) {
+            throw new AccessDeniedException('Access Denied');
+        }
+        $this->taskRepository->delete($task);
     }
 }
