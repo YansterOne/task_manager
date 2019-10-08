@@ -7,6 +7,7 @@ use Core\Project\ProjectService;
 use Core\User\UserFactory;
 use Fake\Project\FakeProjectRepository;
 use Fake\Project\Requests\FakeCreateProjectRequest;
+use Fake\Project\Requests\FakeGetProjectsRequest;
 use Fake\Project\Responses\FakeCreateProjectResponse;
 use Fake\Project\Responses\FakeGetProjectsResponse;
 use Fake\User\FakeUserRepository;
@@ -35,12 +36,14 @@ class ProjectServiceTest extends TestCase
         $user = (new UserFactory())->create($this->faker->userName, $this->faker->password);
         $userRepository = new FakeUserRepository();
         $userID = $userRepository->create($user);
+        $user->setId($userID);
 
         $projectFactory = new ProjectFactory();
         $projectRepository = new FakeProjectRepository();
         $projectService = new ProjectService($projectRepository, $projectFactory, $userRepository);
+        $request = new FakeGetProjectsRequest($userID);
         $response = new FakeGetProjectsResponse();
-        $projectService->getProjects($response);
+        $projectService->getProjects($request, $response);
         $this->assertEmpty($response->getProjects());
     }
 
@@ -49,6 +52,7 @@ class ProjectServiceTest extends TestCase
         $user = (new UserFactory())->create($this->faker->userName, $this->faker->password);
         $userRepository = new FakeUserRepository();
         $userID = $userRepository->create($user);
+        $user->setId($userID);
 
         $projectFactory = new ProjectFactory();
         $projects = [];
@@ -57,8 +61,9 @@ class ProjectServiceTest extends TestCase
         }
         $projectRepository = new FakeProjectRepository($projects);
         $projectService = new ProjectService($projectRepository, $projectFactory, $userRepository);
+        $request = new FakeGetProjectsRequest($userID);
         $response = new FakeGetProjectsResponse();
-        $projectService->getProjects($response);
+        $projectService->getProjects($request, $response);
         $this->assertNotEmpty($response->getProjects());
     }
 

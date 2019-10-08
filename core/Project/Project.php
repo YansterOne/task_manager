@@ -33,4 +33,9 @@ class Project extends Entity
         $this->name = $name;
         return $this;
     }
+
+    public function getUser(): User
+    {
+        return $this->user;
+    }
 }

@@ -3,6 +3,7 @@
 namespace Core\Project;
 
 use Core\Project\Requests\CreateProjectRequest;
+use Core\Project\Requests\GetProjectsRequest;
 use Core\Project\Responses\CreateProjectResponse;
 use Core\Project\Responses\GetProjectsResponse;
 use Core\User\UserRepository;
@@ -32,9 +33,9 @@ class ProjectService
         $response->setProject($project);
     }
 
-    public function getProjects(GetProjectsResponse $response)
+    public function getProjects(GetProjectsRequest $request, GetProjectsResponse $response)
     {
-        $projects = $this->projectRepository->get();
+        $projects = $this->projectRepository->getForUser($request->getAuthUserID());
         $response->setProjects($projects);
     }
 }

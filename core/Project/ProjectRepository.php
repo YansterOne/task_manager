@@ -9,7 +9,7 @@ interface ProjectRepository
     /**
      * @return Project[]
      */
-    public function get(): array;
+    public function getForUser(int $userID): array;
 
     /**
      * @param int $id

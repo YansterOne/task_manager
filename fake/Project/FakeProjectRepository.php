@@ -25,9 +25,11 @@ class FakeProjectRepository implements ProjectRepository
         return $id;
     }
 
-    public function get(): array
+    public function getForUser(int $userID): array
     {
-        return $this->projects;
+        return array_filter($this->projects, function (Project $project) use ($userID) {
+            return $project->getUser()->getId() === $userID;
+        });
     }
 
     public function getByID(int $id): ?Project
