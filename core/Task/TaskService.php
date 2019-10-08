@@ -5,7 +5,9 @@ namespace Core\Task;
 use Core\Project\Exceptions\AccessDeniedException;
 use Core\Project\ProjectRepository;
 use Core\Task\Requests\AddTaskRequest;
+use Core\Task\Requests\UpdateTaskRequest;
 use Core\Task\Responses\AddTaskResponse;
+use Core\Task\Responses\UpdateTaskResponse;
 use Core\User\UserRepository;
 
 class TaskService
@@ -61,4 +63,20 @@ class TaskService
         $response->setTask($task);
     }
 
+    /**
+     * @param UpdateTaskRequest $request
+     * @param UpdateTaskResponse $response
+     * @throws AccessDeniedException
+     */
+    public function updateTask(UpdateTaskRequest $request, UpdateTaskResponse $response)
+    {
+        $user = $this->userRepository->getByID($request->getAuthUserID());
+        $task = $this->taskRepository->getById($request->getTaskID());
+        if (!$task->hasPermissions($user)) {
+            throw new AccessDeniedException('Access Denied');
+        }
+        $task->setName($request->getName())->setPriority($request->getPriority())->setStatus($request->getStatus());
+        $this->taskRepository->update($task);
+        $response->setTask($task);
+    }
 }

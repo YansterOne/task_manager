@@ -28,4 +28,14 @@ class FakeTaskRepository implements TaskRepository
         $this->tasks[$id] = $task;
         return $id;
     }
+
+    public function getById(int $taskID): ?Task
+    {
+        return $this->tasks[$taskID] ?? null;
+    }
+
+    public function update(Task $task)
+    {
+        $this->tasks[$task->getId()] = $task;
+    }
 }

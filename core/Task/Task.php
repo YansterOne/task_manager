@@ -38,4 +38,27 @@ class Task extends Entity
         $this->project = $project;
         $this->user = $user;
     }
+
+    public function hasPermissions(User $user): bool
+    {
+        return $this->user->getId() === $user->getId();
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    public function setPriority(int $priority): self
+    {
+        $this->priority = $priority;
+        return $this;
+    }
+
+    public function setStatus(string $status): self
+    {
+        $this->status = $status;
+        return $this;
+    }
 }
