@@ -4,10 +4,15 @@ namespace Core\Project;
 
 interface ProjectRepository
 {
+    /**
+     * @param Project $project
+     * @return int
+     */
     public function create(Project $project): int;
 
     /**
-     * @return Project[]
+     * @param int $userID
+     * @return array
      */
     public function getForUser(int $userID): array;
 
@@ -16,4 +21,9 @@ interface ProjectRepository
      * @return Project
      */
     public function getByID(int $id): ?Project;
+
+    /**
+     * @param Project $project
+     */
+    public function update(Project $project);
 }

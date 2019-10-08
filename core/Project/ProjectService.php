@@ -4,8 +4,10 @@ namespace Core\Project;
 
 use Core\Project\Requests\CreateProjectRequest;
 use Core\Project\Requests\GetProjectsRequest;
+use Core\Project\Requests\UpdateProjectRequest;
 use Core\Project\Responses\CreateProjectResponse;
 use Core\Project\Responses\GetProjectsResponse;
+use Core\Project\Responses\UpdateProjectResponse;
 use Core\User\UserRepository;
 
 class ProjectService
@@ -37,5 +39,13 @@ class ProjectService
     {
         $projects = $this->projectRepository->getForUser($request->getAuthUserID());
         $response->setProjects($projects);
+    }
+
+    public function updateProject(UpdateProjectRequest $request, UpdateProjectResponse $response)
+    {
+        $project = $this->projectRepository->getByID($request->getProjectID());
+        $project->setName($request->getName());
+        $this->projectRepository->update($project);
+        $response->setProject($project);
     }
 }

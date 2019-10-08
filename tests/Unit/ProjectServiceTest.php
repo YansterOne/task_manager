@@ -8,8 +8,10 @@ use Core\User\UserFactory;
 use Fake\Project\FakeProjectRepository;
 use Fake\Project\Requests\FakeCreateProjectRequest;
 use Fake\Project\Requests\FakeGetProjectsRequest;
+use Fake\Project\Requests\FakeUpdateProjectRequest;
 use Fake\Project\Responses\FakeCreateProjectResponse;
 use Fake\Project\Responses\FakeGetProjectsResponse;
+use Fake\Project\Responses\FakeUpdateProjectResponse;
 use Fake\User\FakeUserRepository;
 use Faker\Provider\Lorem;
 use Tests\TestCase;
@@ -65,6 +67,28 @@ class ProjectServiceTest extends TestCase
         $response = new FakeGetProjectsResponse();
         $projectService->getProjects($request, $response);
         $this->assertNotEmpty($response->getProjects());
+    }
+
+    public function testUpdateProjectSuccess()
+    {
+        $user = (new UserFactory())->create($this->faker->userName, $this->faker->password);
+        $userRepository = new FakeUserRepository();
+        $userID = $userRepository->create($user);
+        $user->setId($userID);
+
+        $projectFactory = new ProjectFactory();
+        $project = $projectFactory->create($this->newProjectName(), $user);
+        $projectRepository = new FakeProjectRepository();
+        $projectID = $projectRepository->create($project);
+        $project->setId($projectID);
+
+        $newProjectName = $this->newProjectName();
+
+        $projectService = new ProjectService($projectRepository, $projectFactory, $userRepository);
+        $request = new FakeUpdateProjectRequest($userID, $projectID, $newProjectName);
+        $response = new FakeUpdateProjectResponse();
+        $projectService->updateProject($request, $response);
+        $this->assertEquals($newProjectName, $response->getProject()->getName());
     }
 
     private function newProjectName(): string
