@@ -23,13 +23,13 @@ class TaskServiceTest extends TestCase
      */
     public function testAddTaskSuccess()
     {
-        $project = (new ProjectFactory())->create($this->faker->word);
-        $projectRepository = new FakeProjectRepository();
-        $projectID = $projectRepository->create($project);
-
         $user = (new UserFactory())->create($this->faker->userName, $this->faker->password);
         $userRepository = new FakeUserRepository();
         $userID = $userRepository->create($user);
+
+        $project = (new ProjectFactory())->create($this->faker->word, $user);
+        $projectRepository = new FakeProjectRepository();
+        $projectID = $projectRepository->create($project);
 
         $request = new FakeAddTaskRequest($this->faker->words(5, true), 0, Task::UNDONE_STATUS, $projectID, $userID);
         $response = new FakeAddTaskResponse();
