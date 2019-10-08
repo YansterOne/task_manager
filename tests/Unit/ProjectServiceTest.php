@@ -2,8 +2,8 @@
 
 namespace Tests\Unit;
 
+use Core\Project\ProjectFactory;
 use Core\Project\ProjectService;
-use Fake\Project\FakeProjectFactory;
 use Fake\Project\FakeProjectRepository;
 use Fake\Project\Requests\FakeCreateProjectRequest;
 use Fake\Project\Responses\FakeCreateProjectResponse;
@@ -16,7 +16,7 @@ class ProjectServiceTest extends TestCase
     public function testCreateProject()
     {
         $projectRepository = new FakeProjectRepository();
-        $projectFactory = new FakeProjectFactory();
+        $projectFactory = new ProjectFactory();
         $projectService = new ProjectService($projectRepository, $projectFactory);
         $request = new FakeCreateProjectRequest($this->newProjectName());
         $response = new FakeCreateProjectResponse();
@@ -26,7 +26,7 @@ class ProjectServiceTest extends TestCase
 
     public function testGetProjectsEmpty()
     {
-        $projectFactory = new FakeProjectFactory();
+        $projectFactory = new ProjectFactory();
         $projectRepository = new FakeProjectRepository();
         $projectService = new ProjectService($projectRepository, $projectFactory);
         $response = new FakeGetProjectsResponse();
@@ -36,7 +36,7 @@ class ProjectServiceTest extends TestCase
 
     public function testGetProjectsNotEmpty()
     {
-        $projectFactory = new FakeProjectFactory();
+        $projectFactory = new ProjectFactory();
         $projects = [];
         for ($i = 0; $i < 20; $i++) {
             $projects[] = $projectFactory->create($this->newProjectName());

@@ -2,7 +2,10 @@
 
 namespace Core\Project;
 
-interface ProjectFactory
+class ProjectFactory
 {
-    public function create(string $name): Project;
+    public function create(string $name): Project
+    {
+        return new Project($name);
+    }
 }

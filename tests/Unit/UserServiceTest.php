@@ -3,8 +3,8 @@
 namespace Tests\Unit;
 
 use Core\User\Exceptions\PasswordNotMatchException;
+use Core\User\UserFactory;
 use Core\User\UserService;
-use Fake\User\FakeUserFactory;
 use Fake\User\FakeUserRepository;
 use Fake\User\Requests\FakeLoginUserRequest;
 use Fake\User\Responses\FakeLoginUserResponse;
@@ -17,7 +17,7 @@ class UserServiceTest extends TestCase
     {
         $this->expectException(PasswordNotMatchException::class);
         $creds = $this->fakeCredentials();
-        $userFactory = new FakeUserFactory();
+        $userFactory = new UserFactory();
         $user = $userFactory->create($creds['username'], $creds['password']);
         $userRepository = new FakeUserRepository([$user]);
         $invalidPassword = $creds['password'] . rand();
@@ -30,7 +30,7 @@ class UserServiceTest extends TestCase
     public function testLoginSuccess()
     {
         $creds = $this->fakeCredentials();
-        $userFactory = new FakeUserFactory();
+        $userFactory = new UserFactory();
         $user = $userFactory->create($creds['username'], $creds['password']);
         $userRepository = new FakeUserRepository([$user]);
         $loginRequest = new FakeLoginUserRequest($creds['username'], $creds['password']);
