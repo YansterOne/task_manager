@@ -38,4 +38,9 @@ class Project extends Entity
     {
         return $this->user;
     }
+
+    public function hasPermissions(User $user): bool
+    {
+        return $this->user->getId() === $user->getId();
+    }
 }

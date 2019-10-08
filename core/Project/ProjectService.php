@@ -2,6 +2,7 @@
 
 namespace Core\Project;
 
+use Core\Project\Exceptions\AccessDeniedException;
 use Core\Project\Requests\CreateProjectRequest;
 use Core\Project\Requests\DeleteProjectRequest;
 use Core\Project\Requests\GetProjectsRequest;
@@ -42,9 +43,18 @@ class ProjectService
         $response->setProjects($projects);
     }
 
+    /**
+     * @param UpdateProjectRequest $request
+     * @param UpdateProjectResponse $response
+     * @throws AccessDeniedException
+     */
     public function updateProject(UpdateProjectRequest $request, UpdateProjectResponse $response)
     {
+        $user = $this->userRepository->getByID($request->getAuthUserID());
         $project = $this->projectRepository->getByID($request->getProjectID());
+        if (!$project->hasPermissions($user)) {
+            throw new AccessDeniedException('Access denied');
+        }
         $project->setName($request->getName());
         $this->projectRepository->update($project);
         $response->setProject($project);
@@ -52,7 +62,11 @@ class ProjectService
 
     public function deleteProject(DeleteProjectRequest $request)
     {
+        $user = $this->userRepository->getByID($request->getAuthUserID());
         $project = $this->projectRepository->getByID($request->getProjectID());
+        if (!$project->hasPermissions($user)) {
+            throw new AccessDeniedException('Access denied');
+        }
         $this->projectRepository->delete($project);
     }
 }

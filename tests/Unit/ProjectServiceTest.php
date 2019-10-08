@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use Core\Project\Exceptions\AccessDeniedException;
 use Core\Project\ProjectFactory;
 use Core\Project\ProjectService;
 use Core\User\UserFactory;
@@ -92,6 +93,33 @@ class ProjectServiceTest extends TestCase
         $this->assertEquals($newProjectName, $response->getProject()->getName());
     }
 
+    public function testUpdateProjectFailAccessDenied()
+    {
+        $this->expectException(AccessDeniedException::class);
+        $userRepository = new FakeUserRepository();
+        $user = (new UserFactory())->create($this->faker->userName, $this->faker->password);
+        $userID = $userRepository->create($user);
+        $user->setId($userID);
+
+        $user2 = (new UserFactory())->create($this->faker->userName, $this->faker->password);
+        $userID2 = $userRepository->create($user2);
+        $user2->setId($userID2);
+
+        $projectFactory = new ProjectFactory();
+        $project = $projectFactory->create($this->newProjectName(), $user2);
+        $projectRepository = new FakeProjectRepository();
+        $projectID = $projectRepository->create($project);
+        $project->setId($projectID);
+
+        $newProjectName = $this->newProjectName();
+
+        $projectService = new ProjectService($projectRepository, $projectFactory, $userRepository);
+        $request = new FakeUpdateProjectRequest($userID, $projectID, $newProjectName);
+        $response = new FakeUpdateProjectResponse();
+        $projectService->updateProject($request, $response);
+        $this->assertEquals($newProjectName, $response->getProject()->getName());
+    }
+
     public function testDeleteProjectSuccess()
     {
         $user = (new UserFactory())->create($this->faker->userName, $this->faker->password);
@@ -101,6 +129,31 @@ class ProjectServiceTest extends TestCase
 
         $projectFactory = new ProjectFactory();
         $project = $projectFactory->create($this->newProjectName(), $user);
+        $projectRepository = new FakeProjectRepository();
+        $projectID = $projectRepository->create($project);
+        $project->setId($projectID);
+
+        $projectService = new ProjectService($projectRepository, $projectFactory, $userRepository);
+        $request = new FakeDeleteProjectRequest($userID, $projectID);
+        $projectService->deleteProject($request);
+        $this->assertEmpty($projectRepository->getByID($projectID));
+    }
+
+    public function testDeleteProjectFailAccessDenied()
+    {
+        $this->expectException(AccessDeniedException::class);
+
+        $user = (new UserFactory())->create($this->faker->userName, $this->faker->password);
+        $userRepository = new FakeUserRepository();
+        $userID = $userRepository->create($user);
+        $user->setId($userID);
+
+        $user2 = (new UserFactory())->create($this->faker->userName, $this->faker->password);
+        $userID2 = $userRepository->create($user2);
+        $user2->setId($userID2);
+
+        $projectFactory = new ProjectFactory();
+        $project = $projectFactory->create($this->newProjectName(), $user2);
         $projectRepository = new FakeProjectRepository();
         $projectID = $projectRepository->create($project);
         $project->setId($projectID);
