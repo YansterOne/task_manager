@@ -43,4 +43,9 @@ class FakeUserRepository implements UserRepository
     {
         return $this->users;
     }
+
+    public function getByID(int $id): ?User
+    {
+        return $this->users[$id];
+    }
 }

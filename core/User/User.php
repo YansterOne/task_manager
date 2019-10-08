@@ -2,13 +2,13 @@
 
 namespace Core\User;
 
-class User
+use Core\Entity;
+
+class User extends Entity
 {
     private $username;
 
     private $password;
-
-    private $id;
 
     public function getUsername(): string
     {
@@ -40,11 +40,6 @@ class User
         return $this->password === md5($password);
     }
 
-    public function setId(int $id): self
-    {
-        $this->id = $id;
-        return $this;
-    }
 
     public function setUsername(string $username): self
     {

@@ -2,10 +2,10 @@
 
 namespace Core\Project;
 
-class Project
-{
-    private $id;
+use Core\Entity;
 
+class Project extends Entity
+{
     private $name;
 
     public function __construct(string $name)
@@ -13,21 +13,12 @@ class Project
         $this->name = $name;
     }
 
-    public function getId(): int
-    {
-        return $this->id;
-    }
 
     public function getName(): string
     {
         return $this->name;
     }
 
-    public function setId(int $id): self
-    {
-        $this->id = $id;
-        return $this;
-    }
 
     public function setName(string $name): self
     {

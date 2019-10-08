@@ -10,4 +10,10 @@ interface ProjectRepository
      * @return Project[]
      */
     public function get(): array;
+
+    /**
+     * @param int $id
+     * @return Project
+     */
+    public function getByID(int $id): ?Project;
 }
