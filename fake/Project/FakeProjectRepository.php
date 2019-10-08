@@ -34,11 +34,16 @@ class FakeProjectRepository implements ProjectRepository
 
     public function getByID(int $id): ?Project
     {
-        return $this->projects[$id];
+        return $this->projects[$id] ?? null;
     }
 
     public function update(Project $project)
     {
         $this->projects[$project->getId()] = $project;
+    }
+
+    public function delete(Project $project)
+    {
+        unset($this->projects[$project->getId()]);
     }
 }

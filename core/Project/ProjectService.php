@@ -3,6 +3,7 @@
 namespace Core\Project;
 
 use Core\Project\Requests\CreateProjectRequest;
+use Core\Project\Requests\DeleteProjectRequest;
 use Core\Project\Requests\GetProjectsRequest;
 use Core\Project\Requests\UpdateProjectRequest;
 use Core\Project\Responses\CreateProjectResponse;
@@ -47,5 +48,11 @@ class ProjectService
         $project->setName($request->getName());
         $this->projectRepository->update($project);
         $response->setProject($project);
+    }
+
+    public function deleteProject(DeleteProjectRequest $request)
+    {
+        $project = $this->projectRepository->getByID($request->getProjectID());
+        $this->projectRepository->delete($project);
     }
 }

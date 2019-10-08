@@ -26,4 +26,9 @@ interface ProjectRepository
      * @param Project $project
      */
     public function update(Project $project);
+
+    /**
+     * @param Project $project
+     */
+    public function delete(Project $project);
 }

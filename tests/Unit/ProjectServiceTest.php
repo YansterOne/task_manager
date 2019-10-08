@@ -7,6 +7,7 @@ use Core\Project\ProjectService;
 use Core\User\UserFactory;
 use Fake\Project\FakeProjectRepository;
 use Fake\Project\Requests\FakeCreateProjectRequest;
+use Fake\Project\Requests\FakeDeleteProjectRequest;
 use Fake\Project\Requests\FakeGetProjectsRequest;
 use Fake\Project\Requests\FakeUpdateProjectRequest;
 use Fake\Project\Responses\FakeCreateProjectResponse;
@@ -89,6 +90,25 @@ class ProjectServiceTest extends TestCase
         $response = new FakeUpdateProjectResponse();
         $projectService->updateProject($request, $response);
         $this->assertEquals($newProjectName, $response->getProject()->getName());
+    }
+
+    public function testDeleteProjectSuccess()
+    {
+        $user = (new UserFactory())->create($this->faker->userName, $this->faker->password);
+        $userRepository = new FakeUserRepository();
+        $userID = $userRepository->create($user);
+        $user->setId($userID);
+
+        $projectFactory = new ProjectFactory();
+        $project = $projectFactory->create($this->newProjectName(), $user);
+        $projectRepository = new FakeProjectRepository();
+        $projectID = $projectRepository->create($project);
+        $project->setId($projectID);
+
+        $projectService = new ProjectService($projectRepository, $projectFactory, $userRepository);
+        $request = new FakeDeleteProjectRequest($userID, $projectID);
+        $projectService->deleteProject($request);
+        $this->assertEmpty($projectRepository->getByID($projectID));
     }
 
     private function newProjectName(): string
