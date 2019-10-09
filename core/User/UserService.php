@@ -3,7 +3,10 @@
 namespace Core\User;
 
 use Core\User\Exceptions\PasswordNotMatchException;
+use Core\User\Exceptions\UserNotFoundException;
+use Core\User\Requests\AuthUserRequest;
 use Core\User\Requests\LoginUserRequest;
+use Core\User\Responses\AuthUserResponse;
 use Core\User\Responses\LoginUserResponse;
 
 class UserService
@@ -31,6 +34,15 @@ class UserService
             throw new PasswordNotMatchException('Password not match');
         }
         $response->setUser($user);
+    }
+
+    public function getAuthUser(AuthUserRequest $request)
+    {
+        $user = $this->userRepository->findByToken($request->getApiToken());
+        if (!$user) {
+            throw new UserNotFoundException('User with this token not found');
+        }
+        $request->setUser($user);
     }
 
     private function createUser(string $username, string $password): User

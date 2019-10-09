@@ -9,4 +9,6 @@ interface UserRepository
     public function create(User $user): int;
 
     public function getByID(int $id): ?User;
+
+    public function findByToken(string $token): ?User;
 }

@@ -3,12 +3,15 @@
 namespace Core\User;
 
 use Core\Entity;
+use Illuminate\Support\Str;
 
 class User extends Entity
 {
     private $username;
 
     private $password;
+
+    private $token;
 
     public function getUsername(): string
     {
@@ -44,6 +47,23 @@ class User extends Entity
     public function setUsername(string $username): self
     {
         $this->username = $username;
+        return $this;
+    }
+
+    public function generateToken(): string
+    {
+        $this->token = Str::random(60);
+        return $this->token;
+    }
+
+    public function getToken(): string
+    {
+        return $this->token;
+    }
+
+    public function setToken(string $token): self
+    {
+        $this->token = $token;
         return $this;
     }
 }
