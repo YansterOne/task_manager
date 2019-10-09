@@ -8,10 +8,11 @@ use Illuminate\Http\JsonResponse;
 
 class LoginResponse extends JsonResponse implements LoginUserResponse
 {
-    private $user;
-
     public function setUser(User $user)
     {
-        $this->user = $user;
+        $this->setData([
+            'username' => $user->getUsername(),
+            'token' => $user->getToken(),
+        ]);
     }
 }
