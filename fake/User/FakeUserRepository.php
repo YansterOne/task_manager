@@ -48,4 +48,14 @@ class FakeUserRepository implements UserRepository
     {
         return $this->users[$id];
     }
+
+    public function findByToken(string $token): ?User
+    {
+        foreach ($this->users as $user) {
+            if ($user->getToken() === $token) {
+                return $user;
+            }
+        }
+        return null;
+    }
 }

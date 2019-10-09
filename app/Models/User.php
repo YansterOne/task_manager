@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class User extends Model
 {
     public $timestamps = false;
-    protected $fillable = ['username', 'password'];
+    protected $fillable = ['username', 'password', 'api_token'];
     protected $guarded = [];
 
     public function getId(): ?int
@@ -23,5 +23,10 @@ class User extends Model
     public function getPassword(): string
     {
         return $this->password;
+    }
+
+    public function getApiToken(): ?string
+    {
+        return $this->api_token;
     }
 }

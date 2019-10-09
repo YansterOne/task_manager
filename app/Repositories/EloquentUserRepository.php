@@ -21,6 +21,7 @@ class EloquentUserRepository implements UserRepository
         $createdUser = DBUser::query()->create([
             'username' => $user->getUsername(),
             'password' => $user->getPassword(),
+            'api_token' => $user->getToken(),
         ]);
         $id = $createdUser->getId();
         $user->setId($id);
@@ -33,12 +34,21 @@ class EloquentUserRepository implements UserRepository
         if (!$founded) {
             return null;
         }
-        return $this->userFactory->create($founded->getUsername(), $founded->getPassword());
+        return $this->userFactory->create($founded->getUsername(), $founded->getPassword(), $founded->getApiToken());
     }
 
     public function getByID(int $id): ?User
     {
         $founded = DBUser::query()->find($id);
+        if (!$founded) {
+            return null;
+        }
+        return $this->userFactory->create($founded->getUsername(), $founded->getPassword(), $founded->getApiToken());
+    }
+
+    public function findByToken(string $token): ?User
+    {
+        $founded = DBUser::query()->where('api_token', $token)->first();
         if (!$founded) {
             return null;
         }
