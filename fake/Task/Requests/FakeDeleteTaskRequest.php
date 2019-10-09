@@ -5,21 +5,17 @@ namespace Fake\Task\Requests;
 
 
 use Core\Task\Requests\DeleteTaskRequest;
+use Core\User\User;
+use Fake\FakeAuthRequest;
 
-class FakeDeleteTaskRequest implements DeleteTaskRequest
+class FakeDeleteTaskRequest extends FakeAuthRequest implements DeleteTaskRequest
 {
     private $taskID;
-    private $userID;
 
-    public function __construct(int $taskID, int $userID)
+    public function __construct(User $user, int $taskID)
     {
+        parent::__construct($user);
         $this->taskID = $taskID;
-        $this->userID = $userID;
-    }
-
-    public function getAuthUserID(): int
-    {
-        return $this->userID;
     }
 
     public function getTaskID(): int

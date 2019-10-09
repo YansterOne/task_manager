@@ -66,8 +66,8 @@ class TaskServiceTest extends TestCase
     {
         $user = $this->createAndSaveUser();
         $project = $this->createAndSaveProject($user);
-        $request = new FakeAddTaskRequest($this->faker->words(5, true), 0, Task::UNDONE_STATUS, $project->getId(),
-            $user->getId());
+        $request = new FakeAddTaskRequest($user, $this->faker->words(5, true), 0, Task::UNDONE_STATUS,
+            $project->getId());
         $response = new FakeAddTaskResponse();
         $this->taskService->addTask($request, $response);
         $this->assertNotEmpty($response->getTask());
@@ -79,8 +79,8 @@ class TaskServiceTest extends TestCase
         $user = $this->createAndSaveUser();
         $user2 = $this->createAndSaveUser();
         $project = $this->createAndSaveProject($user2);
-        $request = new FakeAddTaskRequest($this->faker->words(5, true), 0, Task::UNDONE_STATUS, $project->getId(),
-            $user->getId());
+        $request = new FakeAddTaskRequest($user, $this->faker->words(5, true), 0, Task::UNDONE_STATUS,
+            $project->getId());
         $response = new FakeAddTaskResponse();
         $this->taskService->addTask($request, $response);
     }
@@ -94,7 +94,7 @@ class TaskServiceTest extends TestCase
         $taskID = $this->taskRepository->create($task);
         $task->setId($taskID);
 
-        $request = new FakeUpdateTaskRequest($taskID, $user->getId(), $this->faker->words(5, true), 0,
+        $request = new FakeUpdateTaskRequest($user, $taskID, $this->faker->words(5, true), 0,
             Task::UNDONE_STATUS);
         $response = new FakeUpdateTaskResponse();
 
@@ -114,7 +114,7 @@ class TaskServiceTest extends TestCase
         $taskID = $this->taskRepository->create($task);
         $task->setId($taskID);
 
-        $request = new FakeUpdateTaskRequest($taskID, $user->getId(), $this->faker->words(5, true), 0,
+        $request = new FakeUpdateTaskRequest($user, $taskID, $this->faker->words(5, true), 0,
             Task::UNDONE_STATUS);
         $response = new FakeUpdateTaskResponse();
 
@@ -126,7 +126,7 @@ class TaskServiceTest extends TestCase
         $user = $this->createAndSaveUser();
         $project = $this->createAndSaveProject($user);
         $task = $this->createAndSaveTask($project, $user);
-        $request = new FakeDeleteTaskRequest($task->getId(), $user->getId());
+        $request = new FakeDeleteTaskRequest($user, $task->getId());
         $this->taskService->deleteTask($request);
         $this->assertEmpty($this->taskRepository->getById($task->getId()));
     }
@@ -138,7 +138,7 @@ class TaskServiceTest extends TestCase
         $user2 = $this->createAndSaveUser();
         $project = $this->createAndSaveProject($user2);
         $task = $this->createAndSaveTask($project, $user2);
-        $request = new FakeDeleteTaskRequest($task->getId(), $user->getId());
+        $request = new FakeDeleteTaskRequest($user, $task->getId());
         $this->taskService->deleteTask($request);
     }
 }

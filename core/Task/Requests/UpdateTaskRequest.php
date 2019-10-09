@@ -2,10 +2,10 @@
 
 namespace Core\Task\Requests;
 
-interface UpdateTaskRequest
-{
-    public function getAuthUserID(): int;
+use Core\User\Requests\AuthUserRequest;
 
+interface UpdateTaskRequest extends AuthUserRequest
+{
     public function getTaskID(): int;
 
     public function getName(): string;

@@ -3,18 +3,19 @@
 namespace Fake\Task\Requests;
 
 use Core\Task\Requests\UpdateTaskRequest;
+use Core\User\User;
+use Fake\FakeAuthRequest;
 
-class FakeUpdateTaskRequest implements UpdateTaskRequest
+class FakeUpdateTaskRequest extends FakeAuthRequest implements UpdateTaskRequest
 {
-    private $userID;
     private $taskID;
     private $status;
     private $priority;
     private $name;
 
-    public function __construct(int $taskID, int $userID, string $name, int $priority, string $status)
+    public function __construct(User $user, int $taskID, string $name, int $priority, string $status)
     {
-        $this->userID = $userID;
+        parent::__construct($user);
         $this->taskID = $taskID;
         $this->name = $name;
         $this->priority = $priority;
@@ -24,11 +25,6 @@ class FakeUpdateTaskRequest implements UpdateTaskRequest
     public function getTaskID(): int
     {
         return $this->taskID;
-    }
-
-    public function getAuthUserID(): int
-    {
-        return $this->userID;
     }
 
     public function getName(): string

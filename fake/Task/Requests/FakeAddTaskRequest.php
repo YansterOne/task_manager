@@ -3,22 +3,23 @@
 namespace Fake\Task\Requests;
 
 use Core\Task\Requests\AddTaskRequest;
+use Core\User\User;
+use Fake\FakeAuthRequest;
 
-class FakeAddTaskRequest implements AddTaskRequest
+class FakeAddTaskRequest extends FakeAuthRequest implements AddTaskRequest
 {
     private $name;
     private $priority;
     private $status;
     private $projectID;
-    private $userID;
 
-    public function __construct(string $name, int $priority, string $status, int $projectID, int $userID)
+    public function __construct(User $user, string $name, int $priority, string $status, int $projectID)
     {
+        parent::__construct($user);
         $this->name = $name;
         $this->priority = $priority;
         $this->status = $status;
         $this->projectID = $projectID;
-        $this->userID = $userID;
     }
 
     public function getName(): string
@@ -39,10 +40,5 @@ class FakeAddTaskRequest implements AddTaskRequest
     public function getProjectID(): int
     {
         return $this->projectID;
-    }
-
-    public function getAuthUserID(): int
-    {
-        return $this->userID;
     }
 }

@@ -2,9 +2,9 @@
 
 namespace Core\Task\Requests;
 
-interface DeleteTaskRequest
-{
-    public function getAuthUserID(): int;
+use Core\User\Requests\AuthUserRequest;
 
+interface DeleteTaskRequest extends AuthUserRequest
+{
     public function getTaskID(): int;
 }

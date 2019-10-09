@@ -2,12 +2,10 @@
 
 namespace Core\Task\Requests;
 
-use Core\User\User;
+use Core\User\Requests\AuthUserRequest;
 
-interface AddTaskRequest
+interface AddTaskRequest extends AuthUserRequest
 {
-    public function getAuthUserID(): int;
-
     public function getProjectID(): int;
 
     public function getName(): string;

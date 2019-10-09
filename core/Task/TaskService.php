@@ -52,7 +52,7 @@ class TaskService
      */
     public function addTask(AddTaskRequest $request, AddTaskResponse $response)
     {
-        $user = $this->userRepository->getByID($request->getAuthUserID());
+        $user = $request->getAuthUser();
         $project = $this->projectRepository->getByID($request->getProjectID());
         if (!$project->hasPermissions($user)) {
             throw new AccessDeniedException('Access denied');
@@ -71,7 +71,7 @@ class TaskService
      */
     public function updateTask(UpdateTaskRequest $request, UpdateTaskResponse $response)
     {
-        $user = $this->userRepository->getByID($request->getAuthUserID());
+        $user = $request->getAuthUser();
         $task = $this->taskRepository->getById($request->getTaskID());
         if (!$task->hasPermissions($user)) {
             throw new AccessDeniedException('Access Denied');
@@ -83,7 +83,7 @@ class TaskService
 
     public function deleteTask(DeleteTaskRequest $request)
     {
-        $user = $this->userRepository->getByID($request->getAuthUserID());
+        $user = $request->getAuthUser();
         $task = $this->taskRepository->getById($request->getTaskID());
         if (!$task->hasPermissions($user)) {
             throw new AccessDeniedException('Access Denied');
