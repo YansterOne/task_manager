@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Responses\LoginResponse;
+use Core\User\Exceptions\PasswordNotMatchException;
 use Core\User\UserService;
+use Illuminate\Http\JsonResponse;
 
 class LoginController extends Controller
 {
@@ -16,10 +18,14 @@ class LoginController extends Controller
         $this->userService = $userService;
     }
 
-    public function login(LoginRequest $request)
+    public function login(LoginRequest $request): JsonResponse
     {
         $response = new LoginResponse();
-        $this->userService->login($request, $response);
+        try {
+            $this->userService->login($request, $response);
+        } catch (PasswordNotMatchException $exception) {
+            return response()->json(['message' => $exception->getMessage()], 401);
+        }
         return $response;
     }
 }

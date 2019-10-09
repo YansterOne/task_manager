@@ -22,4 +22,16 @@ class UserLoginTest extends TestCase
         $response->assertJsonStructure(['username', 'token']);
         $response->assertJsonFragment(['username' => $credentials['username']]);
     }
+
+    public function testLoginFail()
+    {
+        $credentials = [
+            'username' => $this->faker->userName,
+            'password' => $this->faker->password
+        ];
+        $this->post('/api/login', $credentials);
+        $credentials['password'] = $credentials['password'] . rand();
+        $response = $this->post('/api/login', $credentials);
+        $response->assertStatus(401);
+    }
 }
