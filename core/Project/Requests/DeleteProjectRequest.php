@@ -2,9 +2,9 @@
 
 namespace Core\Project\Requests;
 
-interface DeleteProjectRequest
-{
-    public function getAuthUserID(): int;
+use Core\User\Requests\AuthUserRequest;
 
+interface DeleteProjectRequest extends AuthUserRequest
+{
     public function getProjectID(): int;
 }

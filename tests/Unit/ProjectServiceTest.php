@@ -55,7 +55,7 @@ class ProjectServiceTest extends TestCase
     public function testCreateProject()
     {
         $user = $this->createAndSaveUser();
-        $request = new FakeCreateProjectRequest($this->newProjectName(), $user->getId());
+        $request = new FakeCreateProjectRequest($user, $this->newProjectName());
         $response = new FakeCreateProjectResponse();
         $this->projectService->createProject($request, $response);
         $this->assertNotEmpty($response->getProject());
@@ -64,7 +64,7 @@ class ProjectServiceTest extends TestCase
     public function testGetProjectsEmpty()
     {
         $user = $this->createAndSaveUser();
-        $request = new FakeGetProjectsRequest($user->getId());
+        $request = new FakeGetProjectsRequest($user);
         $response = new FakeGetProjectsResponse();
         $this->projectService->getProjects($request, $response);
         $this->assertEmpty($response->getProjects());
@@ -76,7 +76,7 @@ class ProjectServiceTest extends TestCase
         for ($i = 0; $i < 20; $i++) {
             $this->projectRepository->create($this->projectFactory->create($this->newProjectName(), $user));
         }
-        $request = new FakeGetProjectsRequest($user->getId());
+        $request = new FakeGetProjectsRequest($user);
         $response = new FakeGetProjectsResponse();
         $this->projectService->getProjects($request, $response);
         $this->assertNotEmpty($response->getProjects());
@@ -87,7 +87,7 @@ class ProjectServiceTest extends TestCase
         $user = $this->createAndSaveUser();
         $project = $this->createAndSaveProject($user);
         $newProjectName = $this->newProjectName();
-        $request = new FakeUpdateProjectRequest($user->getId(), $project->getId(), $newProjectName);
+        $request = new FakeUpdateProjectRequest($user, $project->getId(), $newProjectName);
         $response = new FakeUpdateProjectResponse();
         $this->projectService->updateProject($request, $response);
         $this->assertEquals($newProjectName, $response->getProject()->getName());
@@ -100,7 +100,7 @@ class ProjectServiceTest extends TestCase
         $user2 = $this->createAndSaveUser();
         $project = $this->createAndSaveProject($user2);
         $newProjectName = $this->newProjectName();
-        $request = new FakeUpdateProjectRequest($user->getId(), $project->getId(), $newProjectName);
+        $request = new FakeUpdateProjectRequest($user, $project->getId(), $newProjectName);
         $response = new FakeUpdateProjectResponse();
         $this->projectService->updateProject($request, $response);
     }
@@ -109,7 +109,7 @@ class ProjectServiceTest extends TestCase
     {
         $user = $this->createAndSaveUser();
         $project = $this->createAndSaveProject($user);
-        $request = new FakeDeleteProjectRequest($user->getId(), $project->getId());
+        $request = new FakeDeleteProjectRequest($user, $project->getId());
         $this->projectService->deleteProject($request);
         $this->assertEmpty($this->projectRepository->getByID($project->getId()));
     }
@@ -120,7 +120,7 @@ class ProjectServiceTest extends TestCase
         $user = $this->createAndSaveUser();
         $user2 = $this->createAndSaveUser();
         $project = $this->createAndSaveProject($user2);
-        $request = new FakeDeleteProjectRequest($user->getId(), $project->getId());
+        $request = new FakeDeleteProjectRequest($user, $project->getId());
         $this->projectService->deleteProject($request);
         $this->assertEmpty($this->projectRepository->getByID($project->getId()));
     }

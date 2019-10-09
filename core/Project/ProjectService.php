@@ -30,7 +30,7 @@ class ProjectService
 
     public function createProject(CreateProjectRequest $request, CreateProjectResponse $response)
     {
-        $user = $this->userRepository->getByID($request->getAuthUserID());
+        $user = $request->getAuthUser();
         $project = $this->projectFactory->create($request->getName(), $user);
         $id = $this->projectRepository->create($project);
         $project->setId($id);
@@ -39,7 +39,7 @@ class ProjectService
 
     public function getProjects(GetProjectsRequest $request, GetProjectsResponse $response)
     {
-        $projects = $this->projectRepository->getForUser($request->getAuthUserID());
+        $projects = $this->projectRepository->getForUser($request->getAuthUser()->getId());
         $response->setProjects($projects);
     }
 
@@ -50,7 +50,7 @@ class ProjectService
      */
     public function updateProject(UpdateProjectRequest $request, UpdateProjectResponse $response)
     {
-        $user = $this->userRepository->getByID($request->getAuthUserID());
+        $user = $request->getAuthUser();
         $project = $this->projectRepository->getByID($request->getProjectID());
         if (!$project->hasPermissions($user)) {
             throw new AccessDeniedException('Access denied');
@@ -62,7 +62,7 @@ class ProjectService
 
     public function deleteProject(DeleteProjectRequest $request)
     {
-        $user = $this->userRepository->getByID($request->getAuthUserID());
+        $user = $request->getAuthUser();
         $project = $this->projectRepository->getByID($request->getProjectID());
         if (!$project->hasPermissions($user)) {
             throw new AccessDeniedException('Access denied');

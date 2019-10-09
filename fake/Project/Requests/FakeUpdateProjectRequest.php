@@ -3,23 +3,19 @@
 namespace Fake\Project\Requests;
 
 use Core\Project\Requests\UpdateProjectRequest;
+use Core\User\User;
+use Fake\FakeAuthRequest;
 
-class FakeUpdateProjectRequest implements UpdateProjectRequest
+class FakeUpdateProjectRequest extends FakeAuthRequest implements UpdateProjectRequest
 {
-    private $userID;
     private $name;
     private $projectID;
 
-    public function __construct(int $userID, int $projectID, string $name)
+    public function __construct(User $user, int $projectID, string $name)
     {
-        $this->userID = $userID;
+        parent::__construct($user);
         $this->projectID = $projectID;
         $this->name = $name;
-    }
-
-    public function getAuthUserID(): int
-    {
-        return $this->userID;
     }
 
     public function getName(): string

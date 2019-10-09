@@ -3,26 +3,22 @@
 namespace Fake\Project\Requests;
 
 use Core\Project\Requests\CreateProjectRequest;
+use Core\User\User;
+use Fake\FakeAuthRequest;
 use Faker\Provider\Lorem;
 
-class FakeCreateProjectRequest implements CreateProjectRequest
+class FakeCreateProjectRequest extends FakeAuthRequest implements CreateProjectRequest
 {
     private $name;
-    private $userID;
 
-    public function __construct(string $name, int $userID)
+    public function __construct(User $user, string $name)
     {
+        parent::__construct($user);
         $this->name = $name;
-        $this->userID = $userID;
     }
 
     public function getName(): string
     {
         return $this->name;
-    }
-
-    public function getAuthUserID(): int
-    {
-        return $this->userID;
     }
 }

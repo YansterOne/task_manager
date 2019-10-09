@@ -2,9 +2,9 @@
 
 namespace Core\Project\Requests;
 
-interface CreateProjectRequest
-{
-    public function getAuthUserID(): int;
+use Core\User\Requests\AuthUserRequest;
 
+interface CreateProjectRequest extends AuthUserRequest
+{
     public function getName(): string;
 }

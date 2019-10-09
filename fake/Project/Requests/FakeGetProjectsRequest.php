@@ -3,19 +3,9 @@
 namespace Fake\Project\Requests;
 
 use Core\Project\Requests\GetProjectsRequest;
+use Fake\FakeAuthRequest;
 
-class FakeGetProjectsRequest implements GetProjectsRequest
+class FakeGetProjectsRequest extends FakeAuthRequest implements GetProjectsRequest
 {
-    private $userID;
-
-    public function __construct(int $userID)
-    {
-        $this->userID = $userID;
-    }
-
-    public function getAuthUserID(): int
-    {
-        return $this->userID;
-    }
 
 }
