@@ -38,5 +38,6 @@ class UserService
         $user = $this->userFactory->create($username, $password);
         $id = $this->userRepository->create($user);
         $user->setId($id);
+        return $user;
     }
 }
