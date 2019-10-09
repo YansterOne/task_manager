@@ -3,8 +3,10 @@
 namespace Tests\Unit;
 
 use Core\Project\Exceptions\AccessDeniedException;
+use Core\Project\Project;
 use Core\Project\ProjectFactory;
 use Core\Project\ProjectService;
+use Core\User\User;
 use Core\User\UserFactory;
 use Fake\Project\FakeProjectRepository;
 use Fake\Project\Requests\FakeCreateProjectRequest;
@@ -20,148 +22,107 @@ use Tests\TestCase;
 
 class ProjectServiceTest extends TestCase
 {
-    public function testCreateProject()
+    private $projectRepository;
+    private $projectFactory;
+    private $projectService;
+    private $userRepository;
+
+    public function setUp(): void
+    {
+        $this->userRepository = new FakeUserRepository();
+        $this->projectRepository = new FakeProjectRepository();
+        $this->projectFactory = new ProjectFactory();
+        $this->projectService = new ProjectService($this->projectRepository, $this->projectFactory,
+            $this->userRepository);
+    }
+
+    private function createAndSaveUser(): User
     {
         $user = (new UserFactory())->create($this->faker->userName, $this->faker->password);
-        $userRepository = new FakeUserRepository();
-        $userID = $userRepository->create($user);
+        $userID = $this->userRepository->create($user);
+        $user->setId($userID);
+        return $user;
+    }
 
-        $projectRepository = new FakeProjectRepository();
-        $projectFactory = new ProjectFactory();
-        $projectService = new ProjectService($projectRepository, $projectFactory, $userRepository);
-        $request = new FakeCreateProjectRequest($this->newProjectName(), $userID);
+    private function createAndSaveProject(User $user): Project
+    {
+        $project = $this->projectFactory->create($this->newProjectName(), $user);
+        $projectID = $this->projectRepository->create($project);
+        $project->setId($projectID);
+        return $project;
+    }
+
+    public function testCreateProject()
+    {
+        $user = $this->createAndSaveUser();
+        $request = new FakeCreateProjectRequest($this->newProjectName(), $user->getId());
         $response = new FakeCreateProjectResponse();
-        $projectService->createProject($request, $response);
+        $this->projectService->createProject($request, $response);
         $this->assertNotEmpty($response->getProject());
     }
 
     public function testGetProjectsEmpty()
     {
-        $user = (new UserFactory())->create($this->faker->userName, $this->faker->password);
-        $userRepository = new FakeUserRepository();
-        $userID = $userRepository->create($user);
-        $user->setId($userID);
-
-        $projectFactory = new ProjectFactory();
-        $projectRepository = new FakeProjectRepository();
-        $projectService = new ProjectService($projectRepository, $projectFactory, $userRepository);
-        $request = new FakeGetProjectsRequest($userID);
+        $user = $this->createAndSaveUser();
+        $request = new FakeGetProjectsRequest($user->getId());
         $response = new FakeGetProjectsResponse();
-        $projectService->getProjects($request, $response);
+        $this->projectService->getProjects($request, $response);
         $this->assertEmpty($response->getProjects());
     }
 
     public function testGetProjectsNotEmpty()
     {
-        $user = (new UserFactory())->create($this->faker->userName, $this->faker->password);
-        $userRepository = new FakeUserRepository();
-        $userID = $userRepository->create($user);
-        $user->setId($userID);
-
-        $projectFactory = new ProjectFactory();
-        $projects = [];
+        $user = $this->createAndSaveUser();
         for ($i = 0; $i < 20; $i++) {
-            $projects[] = $projectFactory->create($this->newProjectName(), $user);
+            $this->projectRepository->create($this->projectFactory->create($this->newProjectName(), $user));
         }
-        $projectRepository = new FakeProjectRepository($projects);
-        $projectService = new ProjectService($projectRepository, $projectFactory, $userRepository);
-        $request = new FakeGetProjectsRequest($userID);
+        $request = new FakeGetProjectsRequest($user->getId());
         $response = new FakeGetProjectsResponse();
-        $projectService->getProjects($request, $response);
+        $this->projectService->getProjects($request, $response);
         $this->assertNotEmpty($response->getProjects());
     }
 
     public function testUpdateProjectSuccess()
     {
-        $user = (new UserFactory())->create($this->faker->userName, $this->faker->password);
-        $userRepository = new FakeUserRepository();
-        $userID = $userRepository->create($user);
-        $user->setId($userID);
-
-        $projectFactory = new ProjectFactory();
-        $project = $projectFactory->create($this->newProjectName(), $user);
-        $projectRepository = new FakeProjectRepository();
-        $projectID = $projectRepository->create($project);
-        $project->setId($projectID);
-
+        $user = $this->createAndSaveUser();
+        $project = $this->createAndSaveProject($user);
         $newProjectName = $this->newProjectName();
-
-        $projectService = new ProjectService($projectRepository, $projectFactory, $userRepository);
-        $request = new FakeUpdateProjectRequest($userID, $projectID, $newProjectName);
+        $request = new FakeUpdateProjectRequest($user->getId(), $project->getId(), $newProjectName);
         $response = new FakeUpdateProjectResponse();
-        $projectService->updateProject($request, $response);
+        $this->projectService->updateProject($request, $response);
         $this->assertEquals($newProjectName, $response->getProject()->getName());
     }
 
     public function testUpdateProjectFailAccessDenied()
     {
         $this->expectException(AccessDeniedException::class);
-        $userRepository = new FakeUserRepository();
-        $user = (new UserFactory())->create($this->faker->userName, $this->faker->password);
-        $userID = $userRepository->create($user);
-        $user->setId($userID);
-
-        $user2 = (new UserFactory())->create($this->faker->userName, $this->faker->password);
-        $userID2 = $userRepository->create($user2);
-        $user2->setId($userID2);
-
-        $projectFactory = new ProjectFactory();
-        $project = $projectFactory->create($this->newProjectName(), $user2);
-        $projectRepository = new FakeProjectRepository();
-        $projectID = $projectRepository->create($project);
-        $project->setId($projectID);
-
+        $user = $this->createAndSaveUser();
+        $user2 = $this->createAndSaveUser();
+        $project = $this->createAndSaveProject($user2);
         $newProjectName = $this->newProjectName();
-
-        $projectService = new ProjectService($projectRepository, $projectFactory, $userRepository);
-        $request = new FakeUpdateProjectRequest($userID, $projectID, $newProjectName);
+        $request = new FakeUpdateProjectRequest($user->getId(), $project->getId(), $newProjectName);
         $response = new FakeUpdateProjectResponse();
-        $projectService->updateProject($request, $response);
-        $this->assertEquals($newProjectName, $response->getProject()->getName());
+        $this->projectService->updateProject($request, $response);
     }
 
     public function testDeleteProjectSuccess()
     {
-        $user = (new UserFactory())->create($this->faker->userName, $this->faker->password);
-        $userRepository = new FakeUserRepository();
-        $userID = $userRepository->create($user);
-        $user->setId($userID);
-
-        $projectFactory = new ProjectFactory();
-        $project = $projectFactory->create($this->newProjectName(), $user);
-        $projectRepository = new FakeProjectRepository();
-        $projectID = $projectRepository->create($project);
-        $project->setId($projectID);
-
-        $projectService = new ProjectService($projectRepository, $projectFactory, $userRepository);
-        $request = new FakeDeleteProjectRequest($userID, $projectID);
-        $projectService->deleteProject($request);
-        $this->assertEmpty($projectRepository->getByID($projectID));
+        $user = $this->createAndSaveUser();
+        $project = $this->createAndSaveProject($user);
+        $request = new FakeDeleteProjectRequest($user->getId(), $project->getId());
+        $this->projectService->deleteProject($request);
+        $this->assertEmpty($this->projectRepository->getByID($project->getId()));
     }
 
     public function testDeleteProjectFailAccessDenied()
     {
         $this->expectException(AccessDeniedException::class);
-
-        $user = (new UserFactory())->create($this->faker->userName, $this->faker->password);
-        $userRepository = new FakeUserRepository();
-        $userID = $userRepository->create($user);
-        $user->setId($userID);
-
-        $user2 = (new UserFactory())->create($this->faker->userName, $this->faker->password);
-        $userID2 = $userRepository->create($user2);
-        $user2->setId($userID2);
-
-        $projectFactory = new ProjectFactory();
-        $project = $projectFactory->create($this->newProjectName(), $user2);
-        $projectRepository = new FakeProjectRepository();
-        $projectID = $projectRepository->create($project);
-        $project->setId($projectID);
-
-        $projectService = new ProjectService($projectRepository, $projectFactory, $userRepository);
-        $request = new FakeDeleteProjectRequest($userID, $projectID);
-        $projectService->deleteProject($request);
-        $this->assertEmpty($projectRepository->getByID($projectID));
+        $user = $this->createAndSaveUser();
+        $user2 = $this->createAndSaveUser();
+        $project = $this->createAndSaveProject($user2);
+        $request = new FakeDeleteProjectRequest($user->getId(), $project->getId());
+        $this->projectService->deleteProject($request);
+        $this->assertEmpty($this->projectRepository->getByID($project->getId()));
     }
 
     private function newProjectName(): string
