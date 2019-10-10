@@ -3,6 +3,7 @@
 namespace Core\Project;
 
 use Core\Project\Exceptions\AccessDeniedException;
+use Core\Project\Exceptions\NotFoundException;
 use Core\Project\Requests\CreateProjectRequest;
 use Core\Project\Requests\DeleteProjectRequest;
 use Core\Project\Requests\GetProjectsRequest;
@@ -46,12 +47,16 @@ class ProjectService
     /**
      * @param UpdateProjectRequest $request
      * @param UpdateProjectResponse $response
+     * @throws NotFoundException
      * @throws AccessDeniedException
      */
     public function updateProject(UpdateProjectRequest $request, UpdateProjectResponse $response)
     {
         $user = $request->getAuthUser();
         $project = $this->projectRepository->getByID($request->getProjectID());
+        if (!$project) {
+            throw new NotFoundException('Project not found');
+        }
         if (!$project->hasPermissions($user)) {
             throw new AccessDeniedException('Access denied');
         }

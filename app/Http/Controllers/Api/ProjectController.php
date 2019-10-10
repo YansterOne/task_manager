@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Project\StoreRequest;
+use App\Http\Requests\Project\UpdateRequest;
 use App\Http\Responses\Project\CreateResponse;
+use App\Http\Responses\Project\UpdateResponse;
 use Core\Project\ProjectService;
 use Illuminate\Http\JsonResponse;
 
@@ -24,4 +26,10 @@ class ProjectController extends Controller
         return $response;
     }
 
+    public function update(UpdateRequest $request): JsonResponse
+    {
+        $response = new UpdateResponse();
+        $this->projectService->updateProject($request, $response);
+        return $response;
+    }
 }

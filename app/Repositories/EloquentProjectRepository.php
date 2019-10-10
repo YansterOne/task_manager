@@ -6,14 +6,17 @@ use Core\Project\Project;
 use Core\Project\ProjectFactory;
 use Core\Project\ProjectRepository;
 use App\Models\Project as DBProject;
+use Core\User\UserFactory;
 
 class EloquentProjectRepository implements ProjectRepository
 {
     private $projectFactory;
+    private $userFactory;
 
-    public function __construct(ProjectFactory $projectFactory)
+    public function __construct(ProjectFactory $projectFactory, UserFactory $userFactory)
     {
         $this->projectFactory = $projectFactory;
+        $this->userFactory = $userFactory;
     }
 
     public function create(Project $project): int
@@ -33,12 +36,19 @@ class EloquentProjectRepository implements ProjectRepository
 
     public function getByID(int $id): ?Project
     {
-        return null;
+        $founded = DBProject::query()->find($id);
+        if (!$founded) {
+            return null;
+        }
+        $dbUser = $founded->getUser();
+        $user = $this->userFactory->create($dbUser->getUsername(), $dbUser->getPassword(), $dbUser->getApiToken(),
+            $dbUser->getId());
+        return $this->projectFactory->create($founded->getName(), $user, $founded->getId());
     }
 
     public function update(Project $project)
     {
-
+        DBProject::query()->where('id', $project->getId())->update(['name' => $project->getName()]);
     }
 
     public function delete(Project $project)

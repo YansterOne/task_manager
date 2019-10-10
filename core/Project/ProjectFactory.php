@@ -6,8 +6,12 @@ use Core\User\User;
 
 class ProjectFactory
 {
-    public function create(string $name, User $user): Project
+    public function create(string $name, User $user, int $id = null): Project
     {
-        return new Project($name, $user);
+        $project = new Project($name, $user);
+        if ($id) {
+            $project->setId($id);
+        }
+        return $project;
     }
 }
