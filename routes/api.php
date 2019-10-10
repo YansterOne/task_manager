@@ -17,6 +17,7 @@ Route::group(['namespace' => 'Api'], function () {
     Route::post('login', 'LoginController@login');
 
     Route::group(['prefix' => 'projects', 'as' => 'projects.'], function () {
+        Route::get('', 'ProjectController@get');
         Route::post('', 'ProjectController@store');
         Route::put('{id}', 'ProjectController@update');
     });

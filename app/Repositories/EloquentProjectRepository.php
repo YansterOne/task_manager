@@ -31,7 +31,15 @@ class EloquentProjectRepository implements ProjectRepository
 
     public function getForUser(int $userID): array
     {
-        return [];
+        $founded = DBProject::query()->where('user_id', $userID)->with('user')->get();
+        $result = [];
+        $founded->each(function (DBProject $dbProject) use (&$result) {
+            $dbUser = $dbProject->getUser();
+            $user = $this->userFactory->create($dbUser->getUsername(), $dbUser->getPassword(), $dbUser->getApiToken(),
+                $dbUser->getId());
+            array_push($result, $this->projectFactory->create($dbProject->getName(), $user, $dbProject->getId()));
+        });
+        return $result;
     }
 
     public function getByID(int $id): ?Project

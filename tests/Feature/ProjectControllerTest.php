@@ -50,6 +50,15 @@ class ProjectControllerTest extends TestCase
         $this->assertDatabaseHas('projects', ['id' => $project->getId(), 'name' => $newProjectName]);
     }
 
+    public function testGetProjects()
+    {
+        $project = $this->mockProject();
+        $response = $this->withHeader('Authorization', $this->user->getToken())->get('/api/projects');
+        $response->assertStatus(200);
+        $response->assertJson([['id' => $project->getId(), 'name' => $project->getName(), 'tasks' => []]]);
+    }
+
+
     private function mockProject(): Project
     {
         $projectFactory = new ProjectFactory();
