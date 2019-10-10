@@ -34,7 +34,8 @@ class EloquentUserRepository implements UserRepository
         if (!$founded) {
             return null;
         }
-        return $this->userFactory->create($founded->getUsername(), $founded->getPassword(), $founded->getApiToken());
+        return $this->userFactory->create($founded->getUsername(), $founded->getPassword(), $founded->getApiToken(),
+            $founded->getId());
     }
 
     public function getByID(int $id): ?User
@@ -43,7 +44,8 @@ class EloquentUserRepository implements UserRepository
         if (!$founded) {
             return null;
         }
-        return $this->userFactory->create($founded->getUsername(), $founded->getPassword(), $founded->getApiToken());
+        return $this->userFactory->create($founded->getUsername(), $founded->getPassword(), $founded->getApiToken(),
+            $founded->getId());
     }
 
     public function findByToken(string $token): ?User
@@ -52,6 +54,7 @@ class EloquentUserRepository implements UserRepository
         if (!$founded) {
             return null;
         }
-        return $this->userFactory->create($founded->getUsername(), $founded->getPassword());
+        return $this->userFactory->create($founded->getUsername(), $founded->getPassword(), $founded->getApiToken(),
+            $founded->getId());
     }
 }

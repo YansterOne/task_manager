@@ -15,4 +15,9 @@ use Illuminate\Http\Request;
 
 Route::group(['namespace' => 'Api'], function () {
     Route::post('login', 'LoginController@login');
+
+    Route::group(['prefix' => 'projects', 'as' => 'projects.'], function () {
+        Route::post('', 'ProjectController@store');
+    });
 });
+
