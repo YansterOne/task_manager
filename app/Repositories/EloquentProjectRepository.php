@@ -61,6 +61,6 @@ class EloquentProjectRepository implements ProjectRepository
 
     public function delete(Project $project)
     {
-
+        DBProject::query()->where('id', $project->getId())->delete();
     }
 }

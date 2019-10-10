@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Project\DeleteRequest;
 use App\Http\Requests\Project\GetRequest;
 use App\Http\Requests\Project\StoreRequest;
 use App\Http\Requests\Project\UpdateRequest;
@@ -40,5 +41,11 @@ class ProjectController extends Controller
         $response = new UpdateResponse();
         $this->projectService->updateProject($request, $response);
         return $response;
+    }
+
+    public function delete(DeleteRequest $request): JsonResponse
+    {
+        $this->projectService->deleteProject($request);
+        return response()->json();
     }
 }

@@ -20,6 +20,7 @@ Route::group(['namespace' => 'Api'], function () {
         Route::get('', 'ProjectController@get');
         Route::post('', 'ProjectController@store');
         Route::put('{id}', 'ProjectController@update');
+        Route::delete('{id}', 'ProjectController@delete');
     });
 });
 

@@ -58,6 +58,15 @@ class ProjectControllerTest extends TestCase
         $response->assertJson([['id' => $project->getId(), 'name' => $project->getName(), 'tasks' => []]]);
     }
 
+    public function testDeleteProject()
+    {
+        $project = $this->mockProject();
+        $response = $this->withHeader('Authorization', $this->user->getToken())
+            ->delete('/api/projects/' . $project->getId());
+        $response->assertStatus(200);
+        $this->assertDatabaseMissing('projects', ['id' => $project->getId()]);
+    }
+
 
     private function mockProject(): Project
     {
