@@ -10,6 +10,7 @@ class Task extends Entity
 {
     public const DONE_STATUS = 'Done';
     public const UNDONE_STATUS = 'Undone';
+
     /**
      * @var string
      */
@@ -30,13 +31,30 @@ class Task extends Entity
      */
     private $priority;
 
-    public function __construct(string $name, string $status, int $priority, Project $project, User $user)
-    {
+    /**
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @var \DateTime
+     */
+    private $deadline;
+
+    public function __construct(
+        string $name,
+        string $status,
+        int $priority,
+        Project $project,
+        User $user,
+        \DateTime $deadline = null
+    ) {
         $this->name = $name;
         $this->status = $status;
         $this->priority = $priority;
         $this->project = $project;
         $this->user = $user;
+        $this->deadline = $deadline;
     }
 
     public function hasPermissions(User $user): bool
@@ -60,5 +78,26 @@ class Task extends Entity
     {
         $this->status = $status;
         return $this;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function getDeadline(): \DateTime
+    {
+        return $this->deadline;
+    }
+
+    public function setDeadline(\DateTime $deadline): self
+    {
+        $this->deadline = $deadline;
+        return $this;
+    }
+
+    public function getPriority(): int
+    {
+        return $this->priority;
     }
 }
