@@ -47,7 +47,7 @@ class UserService
 
     private function createUser(string $username, string $password): User
     {
-        $user = $this->userFactory->create($username, $password);
+        $user = $this->userFactory->create($username, $password, null, null, true);
         $id = $this->userRepository->create($user);
         $user->setId($id);
         return $user;

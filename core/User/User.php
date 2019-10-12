@@ -23,7 +23,6 @@ class User extends Entity
         return $this->password;
     }
 
-
     /**
      * @param string $password
      * @return $this
@@ -31,6 +30,12 @@ class User extends Entity
     public function setNewPassword(string $password): self
     {
         $this->password = md5($password);
+        return $this;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
         return $this;
     }
 
