@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Task\StoreRequest;
 use App\Http\Requests\Task\UpdateRequest;
+use App\Http\Responses\Task\DeleteRequest;
 use App\Http\Responses\Task\StoreResponse;
 use App\Http\Responses\Task\UpdateResponse;
 use Core\Task\TaskService;
@@ -32,5 +33,11 @@ class TaskController extends Controller
         $response = new UpdateResponse();
         $this->taskService->updateTask($request, $response);
         return $response;
+    }
+
+    public function delete(DeleteRequest $request): JsonResponse
+    {
+        $this->taskService->deleteTask($request);
+        return response()->json();
     }
 }

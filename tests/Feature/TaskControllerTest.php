@@ -109,6 +109,17 @@ class TaskControllerTest extends TestCase
         $response->assertJsonStructure(['id', 'name', 'status', 'deadline', 'priority']);
     }
 
+    public function testDeleteSuccess()
+    {
+        $task = $this->mockTask();
+        $response = $this->withHeaders([
+            'Authorization' => $this->user->getToken(),
+            'Accept' => 'application/json'
+        ])->delete('/api/tasks/' . $task->getId());
+        $response->assertStatus(200);
+        $this->assertDatabaseMissing('tasks', ['id' => $task->getId()]);
+    }
+
     private function taskData(): array
     {
         return [
