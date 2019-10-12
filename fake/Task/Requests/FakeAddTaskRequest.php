@@ -12,14 +12,22 @@ class FakeAddTaskRequest extends FakeAuthRequest implements AddTaskRequest
     private $priority;
     private $status;
     private $projectID;
+    private $deadline;
 
-    public function __construct(User $user, string $name, int $priority, string $status, int $projectID)
-    {
+    public function __construct(
+        User $user,
+        string $name,
+        int $priority,
+        string $status,
+        int $projectID,
+        \DateTime $deadline = null
+    ) {
         parent::__construct($user);
         $this->name = $name;
         $this->priority = $priority;
         $this->status = $status;
         $this->projectID = $projectID;
+        $this->deadline = $deadline;
     }
 
     public function getName(): string
@@ -40,5 +48,10 @@ class FakeAddTaskRequest extends FakeAuthRequest implements AddTaskRequest
     public function getProjectID(): int
     {
         return $this->projectID;
+    }
+
+    public function getDeadline(): ?\DateTime
+    {
+        return $this->deadline;
     }
 }
