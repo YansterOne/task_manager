@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import App from './App.vue';
 import './bootstrap';
-import './plugins/vuetify'
+import vuetify from './plugins/vuetify';
 
 const files = require.context('./', true, /\.vue$/i);
 files.keys().map(key => {
@@ -13,4 +13,5 @@ const app = new Vue({
     el: '#app',
     components: {App},
     template: `<App/>`,
+    vuetify
 });
