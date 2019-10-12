@@ -85,7 +85,7 @@ class Task extends Entity
         return $this->name;
     }
 
-    public function getDeadline(): \DateTime
+    public function getDeadline(): ?\DateTime
     {
         return $this->deadline;
     }
@@ -99,5 +99,20 @@ class Task extends Entity
     public function getPriority(): int
     {
         return $this->priority;
+    }
+
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
+
+    public function getProject(): Project
+    {
+        return $this->project;
+    }
+
+    public function getUser(): User
+    {
+        return $this->user;
     }
 }

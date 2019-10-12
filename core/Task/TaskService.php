@@ -58,7 +58,7 @@ class TaskService
             throw new AccessDeniedException('Access denied');
         }
         $task = $this->taskFactory->create($request->getName(), $request->getStatus(), $request->getPriority(),
-            $project, $user);
+            $project, $user, $request->getDeadline());
         $id = $this->taskRepository->create($task);
         $task->setId($id);
         $response->setTask($task);
