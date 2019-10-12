@@ -22,5 +22,9 @@ Route::group(['namespace' => 'Api'], function () {
         Route::put('{id}', 'ProjectController@update');
         Route::delete('{id}', 'ProjectController@delete');
     });
+
+    Route::group(['prefix' => 'tasks', 'as' => 'tasks.'], function () {
+        Route::post('', 'TaskController@store');
+    });
 });
 
