@@ -13,4 +13,6 @@ interface UpdateTaskRequest extends AuthUserRequest
     public function getStatus(): string;
 
     public function getPriority(): int;
+
+    public function getDeadline(): ?\DateTime;
 }

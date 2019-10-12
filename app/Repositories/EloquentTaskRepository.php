@@ -67,6 +67,7 @@ class EloquentTaskRepository implements TaskRepository
         $project = $this->projectFactory->create($dbProject->getName(), $projectUser, $dbProject->getId());
         $task = $this->taskFactory->create($dbTask->getName(), $dbTask->getStatus(), $dbTask->getPriority(), $project,
             $user);
+        $task->setId($dbTask->getId());
         return $task;
     }
 

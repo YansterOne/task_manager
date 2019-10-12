@@ -3,10 +3,12 @@
 namespace Tests\Feature;
 
 use App\Repositories\EloquentProjectRepository;
+use App\Repositories\EloquentTaskRepository;
 use App\Repositories\EloquentUserRepository;
 use Core\Project\Project;
 use Core\Project\ProjectFactory;
 use Core\Task\Task;
+use Core\Task\TaskFactory;
 use Core\User\User;
 use Core\User\UserFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -41,6 +43,15 @@ class TaskControllerTest extends TestCase
      */
     private $project;
 
+    /**
+     * @var EloquentTaskRepository
+     */
+    private $taskRepository;
+    /**
+     * @var TaskFactory
+     */
+    private $taskFactory;
+
     public function setUp(): void
     {
         parent::setUp();
@@ -48,6 +59,9 @@ class TaskControllerTest extends TestCase
         $this->userRepository = new EloquentUserRepository($this->userFactory);
         $this->projectFactory = new ProjectFactory();
         $this->projectRepository = new EloquentProjectRepository($this->projectFactory, $this->userFactory);
+        $this->taskFactory = new TaskFactory();
+        $this->taskRepository = new EloquentTaskRepository($this->taskFactory, $this->projectFactory,
+            $this->userFactory);
         $this->mockUser();
         $this->mockProject();
     }
@@ -64,6 +78,14 @@ class TaskControllerTest extends TestCase
         $this->projectRepository->create($this->project);
     }
 
+    private function mockTask()
+    {
+        $task = $this->taskFactory->create($this->faker->words(10, true), $this->randomStatus(),
+            $this->faker->numberBetween(), $this->project, $this->user, $this->faker->dateTime);
+        $this->taskRepository->create($task);
+        return $task;
+    }
+
     public function testCreateTaskSuccess()
     {
         $taskData = $this->taskData();
@@ -71,21 +93,38 @@ class TaskControllerTest extends TestCase
             'Authorization' => $this->user->getToken(),
             'Accept' => 'application/json'
         ])->post('/api/tasks', $taskData);
-        $response->dump();
+        $response->assertStatus(200);
+        $response->assertJsonStructure(['id', 'name', 'status', 'deadline', 'priority']);
+    }
+
+    public function testUpdateSuccess()
+    {
+        $task = $this->mockTask();
+        $taskData = $this->taskData();
+        $response = $this->withHeaders([
+            'Authorization' => $this->user->getToken(),
+            'Accept' => 'application/json'
+        ])->put('/api/tasks/' . $task->getId(), $taskData);
         $response->assertStatus(200);
         $response->assertJsonStructure(['id', 'name', 'status', 'deadline', 'priority']);
     }
 
     private function taskData(): array
     {
-        $statuses = [Task::UNDONE_STATUS, Task::DONE_STATUS];
         return [
             'name' => $this->faker->words(10, true),
-            'status' => $statuses[array_rand($statuses)],
+            'status' => $this->randomStatus(),
             'deadline' => $this->faker->dateTime,
             'priority' => $this->faker->numberBetween(),
             'project_id' => $this->project->getId(),
         ];
     }
+
+    private function randomStatus(): string
+    {
+        $taskStatuses = [Task::UNDONE_STATUS, Task::DONE_STATUS];
+        return $taskStatuses[array_rand($taskStatuses)];
+    }
+
 }
 

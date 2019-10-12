@@ -1,12 +1,14 @@
 <?php
 
+
 namespace App\Http\Responses\Task;
 
-use Core\Task\Responses\AddTaskResponse;
+
+use Core\Task\Responses\UpdateTaskResponse;
 use Core\Task\Task;
 use Illuminate\Http\JsonResponse;
 
-class StoreResponse extends JsonResponse implements AddTaskResponse
+class UpdateResponse extends JsonResponse implements UpdateTaskResponse
 {
     public function setTask(Task $task)
     {
