@@ -1,6 +1,7 @@
-import './bootstrap';
 import Vue from 'vue';
 import App from './App.vue';
+import './bootstrap';
+import './plugins/vuetify'
 
 const files = require.context('./', true, /\.vue$/i);
 files.keys().map(key => {
