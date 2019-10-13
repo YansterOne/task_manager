@@ -4,7 +4,7 @@
             <v-text-field v-model="formData.username" label="Username" :rules="[rules.required]"></v-text-field>
             <v-text-field v-model="formData.password" label="Password" type="password"
                           :rules="[rules.required]"></v-text-field>
-            <v-btn dark block type="submit">Login</v-btn>
+            <v-btn block type="submit" color="primary">Login</v-btn>
         </v-form>
     </div>
 </template>

@@ -3,16 +3,16 @@
         <v-card-title class="project-card__header">
             <div v-if="!edit" class="project-card__title">
                 <div class="project-card__title-text">{{ name }}</div>
-                <v-btn dark @click="edit = !edit">
+                <v-btn @click="edit = !edit" color="primary">
                     <v-icon>mdi-pencil</v-icon>
                 </v-btn>
             </div>
             <v-form v-else class="project-card__edit" ref="projectCardEdit">
                 <v-text-field v-model="editName" :rules="[rules.required]" validate-on-blur></v-text-field>
-                <v-btn dark @click="saveProject">Save</v-btn>
+                <v-btn @click="saveProject" color="primary">Save</v-btn>
             </v-form>
             <div class="project-card__controls">
-                <v-btn dark @click="deleteProject">
+                <v-btn @click="deleteProject" color="primary">
                     <v-icon>mdi-delete</v-icon>
                 </v-btn>
             </div>

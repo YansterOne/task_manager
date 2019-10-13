@@ -1,8 +1,8 @@
 <template>
-    <div class="app">
+    <v-app>
         <login-page v-if="!isAuthorized"></login-page>
         <projects-page v-else></projects-page>
-    </div>
+    </v-app>
 </template>
 
 <script>

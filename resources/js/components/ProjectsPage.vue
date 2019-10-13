@@ -6,7 +6,7 @@
             ></project-card>
         </div>
         <div class="project__add">
-            <v-btn dark @click="addProject">Add project</v-btn>
+            <v-btn @click="addProject" color="primary">Add project</v-btn>
         </div>
     </div>
 </template>
