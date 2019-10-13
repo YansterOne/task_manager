@@ -29,7 +29,9 @@
           return;
         }
         axios.post('/api/login', {username: this.formData.username, password: this.formData.password}).
-            then(response => this.login(response.data.username, response.data.token));
+            then(response => this.login(response.data.username, response.data.token)).catch(error => {
+          this.$store.commit('errorMessage', error.response.data.message);
+        });
       },
     },
   };

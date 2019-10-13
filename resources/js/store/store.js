@@ -9,6 +9,7 @@ export default new Vuex.Store({
             username: null,
             token: null,
         },
+        errorMessage: '',
     },
     getters: {
         username(state) {
@@ -17,6 +18,9 @@ export default new Vuex.Store({
         token(state) {
             return state.auth.token;
         },
+        errorMessage(state) {
+            return state.errorMessage;
+        },
     },
     mutations: {
         username(state, value) {
@@ -24,6 +28,9 @@ export default new Vuex.Store({
         },
         token(state, value) {
             state.auth.token = value;
+        },
+        errorMessage(state, value) {
+            state.errorMessage = value;
         },
     },
 });
