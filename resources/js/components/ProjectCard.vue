@@ -18,6 +18,7 @@
                 </v-btn>
             </div>
         </v-card-title>
+        <task-add v-if="id" :project-id="id"></task-add>
         <div v-for="(task, index) in tasks" :key="index">
             {{ task.name }}
         </div>
