@@ -5,7 +5,7 @@
                 <div class="project-card__title-text">{{ name }}</div>
             </div>
             <v-form v-else class="project-card__edit" ref="projectCardEdit" @submit.prevent>
-                <v-text-field v-model="editName" label="Project name" :rules="[rules.required]"
+                <v-text-field v-model="editName" label="Project name" :rules="[rules.required, rules.maxLength]"
                               validate-on-blur></v-text-field>
             </v-form>
             <div class="project-card__controls">

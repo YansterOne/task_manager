@@ -1,6 +1,6 @@
 <template>
     <v-form class="task-add" ref="taskAddForm" @submit.prevent="createTask">
-        <v-text-field v-model="name" :rules="[rules.required]" class="task-add__input"></v-text-field>
+        <v-text-field v-model="name" :rules="[rules.required, rules.maxLength]" class="task-add__input"></v-text-field>
         <v-btn color="primary" class="task-add__btn" type="submit">Add Task</v-btn>
     </v-form>
 </template>

@@ -1,9 +1,10 @@
 <template>
     <div class="login">
         <v-form class="login__form" @submit.prevent="submit" ref="loginForm">
-            <v-text-field v-model="formData.username" label="Username" :rules="[rules.required]"></v-text-field>
+            <v-text-field v-model="formData.username" label="Username"
+                          :rules="[rules.required, rules.maxLength]"></v-text-field>
             <v-text-field v-model="formData.password" label="Password" type="password"
-                          :rules="[rules.required]"></v-text-field>
+                          :rules="[rules.required, rules.maxLength]"></v-text-field>
             <v-btn block type="submit" color="primary">Login</v-btn>
         </v-form>
     </div>

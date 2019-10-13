@@ -7,7 +7,7 @@
             <v-list-item-content class="task-item__content">
                 <v-list-item-title v-if="!edit">{{ name }}</v-list-item-title>
                 <v-form v-else class="task-item__edit" ref="taskItemEdit">
-                    <v-text-field v-model="formData.name" label="Task" :rules="[rules.required]"
+                    <v-text-field v-model="formData.name" label="Task" :rules="[rules.required, rules.maxLength]"
                                   validate-on-blur></v-text-field>
                 </v-form>
             </v-list-item-content>
