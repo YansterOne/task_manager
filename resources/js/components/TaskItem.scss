@@ -1,0 +1,7 @@
+.task-item {
+    height: 94px;
+
+    &#{__content} {
+        margin-right: 20px;
+    }
+}

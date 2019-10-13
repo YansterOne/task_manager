@@ -4,7 +4,7 @@
             <div v-if="!edit" class="project-card__title">
                 <div class="project-card__title-text">{{ name }}</div>
             </div>
-            <v-form v-else class="project-card__edit" ref="projectCardEdit">
+            <v-form v-else class="project-card__edit" ref="projectCardEdit" @submit.prevent>
                 <v-text-field v-model="editName" label="Project name" :rules="[rules.required]"
                               validate-on-blur></v-text-field>
             </v-form>
@@ -18,10 +18,15 @@
                 </v-btn>
             </div>
         </v-card-title>
-        <task-add v-if="id" :project-id="id"></task-add>
-        <div v-for="(task, index) in tasks" :key="index">
-            {{ task.name }}
-        </div>
+        <task-add v-if="id" :project-id="id" @create="addTask"></task-add>
+        <v-divider></v-divider>
+        <v-list>
+            <task-item v-for="(task, index) in tasks" :key="index"
+                       :id="task.id" :name="task.name" :project-id="task.project_id"
+                       :status="task.status" :deadline="task.deadline" :priority="task.priority"
+                       @update="updateTask(index, $event)" @delete="deleteTask(index)"
+            ></task-item>
+        </v-list>
     </v-card>
 </template>
 
@@ -51,6 +56,7 @@
       return {
         edit: this.id === null,
         editName: this.name,
+        editTasks: this.tasks,
       };
     },
     methods: {
@@ -73,15 +79,31 @@
       },
       update() {
         axios.put('/api/projects/' + this.id, {name: this.editName}).then(response => {
+          let project = response.data;
+          project.tasks = this.editTasks;
           this.$emit('update', response.data);
           this.edit = false;
         });
       },
       create() {
         axios.post('/api/projects', {name: this.editName}).then(response => {
-          this.$emit('update', response.data);
+          let project = response.data;
+          project.tasks = this.editTasks;
+          this.$emit('update', project);
           this.edit = false;
         });
+      },
+      addTask(data) {
+        this.editTasks.unshift(data);
+        this.$emit('update', {id: this.id, name: this.name, tasks: this.editTasks});
+      },
+      updateTask(index, data) {
+        this.$set(this.editTasks, index, data);
+        this.$emit('update', {id: this.id, name: this.name, tasks: this.editTasks});
+      },
+      deleteTask(index) {
+        this.editTasks.splice(index, 1);
+        this.$emit('update', {id: this.id, name: this.name, tasks: this.editTasks});
       },
     },
   };

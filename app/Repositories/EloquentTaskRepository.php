@@ -66,7 +66,7 @@ class EloquentTaskRepository implements TaskRepository
     {
         DBTask::query()->where('id', $task->getId())->update([
             'name' => $task->getName(),
-            'status' => $task->getName(),
+            'status' => $task->getStatus(),
             'priority' => $task->getPriority(),
             'deadline' => $task->getDeadline(),
         ]);

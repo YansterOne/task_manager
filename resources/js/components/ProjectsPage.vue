@@ -1,8 +1,9 @@
 <template>
     <div class="projects">
         <div class="projects__list">
-            <project-card v-for="(project, index) in projects" :name="project.name" :id="project.id" :key="index"
-                          @update="updateProject(index, $event)" @delete="deleteProject(index)"
+            <project-card v-for="(project, index) in projects" :name="project.name" :id="project.id"
+                          :tasks="project.tasks" :key="index" @update="updateProject(index, $event)"
+                          @delete="deleteProject(index)"
             ></project-card>
         </div>
         <div class="project__add">
