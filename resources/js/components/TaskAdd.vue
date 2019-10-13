@@ -39,6 +39,8 @@
         }).then(response => {
           this.$emit('create', response.data);
           this.$refs['taskAddForm'].reset();
+        }).catch(error => {
+          this.$store.commit('errorMessage', error.response.data.message);
         });
       },
     },

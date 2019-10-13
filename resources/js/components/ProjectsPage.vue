@@ -27,6 +27,8 @@
       loadProjects() {
         axios.get('/api/projects').then(response => {
           this.projects = response.data;
+        }).catch(error => {
+          this.$store.commit('errorMessage', error.response.data.message);
         });
       },
       addProject() {

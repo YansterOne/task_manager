@@ -92,6 +92,8 @@
           project_id: this.projectId,
         }).then(response => {
           this.$emit('update', response.data);
+        }).catch(error => {
+          this.$store.commit('errorMessage', error.response.data.message);
         });
       },
       update() {
@@ -107,11 +109,15 @@
         }).then(response => {
           this.$emit('update', response.data);
           this.edit = false;
+        }).catch(error => {
+          this.$store.commit('errorMessage', error.response.data.message);
         });
       },
       deleteTask() {
         axios.delete('/api/tasks/' + this.id).then(() => {
           this.$emit('delete');
+        }).catch(error => {
+          this.$store.commit('errorMessage', error.response.data.message);
         });
       },
     },

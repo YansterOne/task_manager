@@ -74,7 +74,9 @@
       },
       deleteProject() {
         if (this.id) {
-          axios.delete('/api/projects/' + this.id).then(() => this.$emit('delete'));
+          axios.delete('/api/projects/' + this.id).then(() => this.$emit('delete')).catch(error => {
+            this.$store.commit('errorMessage', error.response.data.message);
+          });
         } else {
           this.$emit('delete');
         }
@@ -85,6 +87,8 @@
           project.tasks = this.editTasks;
           this.$emit('update', response.data);
           this.edit = false;
+        }).catch(error => {
+          this.$store.commit('errorMessage', error.response.data.message);
         });
       },
       create() {
@@ -93,6 +97,8 @@
           project.tasks = this.editTasks;
           this.$emit('update', project);
           this.edit = false;
+        }).catch(error => {
+          this.$store.commit('errorMessage', error.response.data.message);
         });
       },
       addTask(data) {
