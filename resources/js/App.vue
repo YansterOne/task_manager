@@ -1,7 +1,7 @@
 <template>
     <div class="app">
         <login-page v-if="!isAuthorized"></login-page>
-        <v-btn v-else @click="logout" dark>Logout</v-btn>
+        <projects-page v-else></projects-page>
     </div>
 </template>
 

@@ -1,0 +1,17 @@
+.project-card {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    width: 100%;
+
+    &#{__header} {
+        display: flex;
+        align-items: baseline;
+        flex-wrap: nowrap;
+    }
+
+    &#{__edit} {
+        width: 100%;
+        display: flex;
+        align-items: baseline;
+    }
+}
