@@ -18,15 +18,17 @@
                 </v-btn>
             </div>
         </v-card-title>
-        <task-add v-if="id" :project-id="id" @create="addTask"></task-add>
-        <v-divider></v-divider>
-        <v-list>
-            <task-item v-for="(task, index) in tasks" :key="index"
-                       :id="task.id" :name="task.name" :project-id="task.project_id"
-                       :status="task.status" :deadline="task.deadline" :priority="task.priority"
-                       @update="updateTask(index, $event)" @delete="deleteTask(index)"
-            ></task-item>
-        </v-list>
+        <div v-if="id" class="project-card__task-management">
+            <task-add :project-id="id" @create="addTask"></task-add>
+            <v-divider></v-divider>
+            <v-list v-if="tasks" class="project-card__task-list">
+                <task-item v-for="(task, index) in tasks" :key="index"
+                           :id="task.id" :name="task.name" :project-id="task.project_id"
+                           :status="task.status" :deadline="task.deadline" :priority="task.priority"
+                           @update="updateTask(index, $event)" @delete="deleteTask(index)"
+                ></task-item>
+            </v-list>
+        </div>
     </v-card>
 </template>
 
