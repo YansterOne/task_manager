@@ -16,11 +16,14 @@
         type: Number,
         required: true,
       },
+      priority: {
+        type: Number,
+        required: true,
+      },
     },
     data() {
       return {
         name: '',
-        priority: 0,
         deadline: null,
         status: 'undone',
       };

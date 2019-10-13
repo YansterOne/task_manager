@@ -1,6 +1,7 @@
 .task-item {
     height: 94px;
     transition: 0.3s ease-in-out;
+    cursor: move;
 
     &:hover {
         background-color: darken(white, 5%);

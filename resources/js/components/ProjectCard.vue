@@ -19,16 +19,18 @@
             </div>
         </v-card-title>
         <div v-if="id" class="project-card__task-management">
-            <task-add :project-id="id" @create="addTask"></task-add>
+            <task-add :project-id="id" @create="addTask" :priority="tasks.length + 1"></task-add>
             <v-divider></v-divider>
             <v-list v-if="tasks" class="project-card__task-list">
-                <transition-group name="fade">
-                    <task-item v-for="(task, index) in tasks" :key="task.id"
-                               :id="task.id" :name="task.name" :project-id="task.project_id"
-                               :status="task.status" :deadline="task.deadline" :priority="task.priority"
-                               @update="updateTask(index, $event)" @delete="deleteTask(index)"
-                    ></task-item>
-                </transition-group>
+                <draggable v-model="editTasks" @end="dragEnd">
+                    <transition-group name="fade">
+                        <task-item v-for="(task, index) in editTasks" :key="task.id"
+                                   :id="task.id" :name="task.name" :project-id="task.project_id"
+                                   :status="task.status" :deadline="task.deadline" :priority="task.priority"
+                                   @update="updateTask(index, $event)" @delete="deleteTask(index)"
+                        ></task-item>
+                    </transition-group>
+                </draggable>
             </v-list>
         </div>
     </v-card>
@@ -36,10 +38,14 @@
 
 <script>
   import validation from '../mixins/validation';
+  import draggable from 'vuedraggable';
 
   export default {
     name: 'ProjectCard',
     mixins: [validation],
+    components: {
+      draggable,
+    },
     props: {
       name: {
         type: String,
@@ -114,6 +120,23 @@
       deleteTask(index) {
         this.editTasks.splice(index, 1);
         this.$emit('update', {id: this.id, name: this.name, tasks: this.editTasks});
+      },
+      dragEnd() {
+        this.editTasks.forEach((task, index) => {
+          axios.put('/api/tasks/' + task.id, {
+            name: task.name,
+            status: task.status,
+            deadline: task.deadline,
+            priority: this.tasks.length - index,
+            project_id: task.project_id,
+          }).then(() => {
+            this.$set(this.editTasks, index, task);
+            this.$emit('update', {id: this.id, name: this.name, tasks: this.editTasks});
+          }).catch(error => {
+            console.log(error);
+            this.$store.commit('errorMessage', error.response.data.message);
+          });
+        });
       },
     },
   };

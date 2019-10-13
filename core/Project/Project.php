@@ -55,6 +55,9 @@ class Project extends Entity
 
     public function getTasks(): array
     {
+        usort($this->tasks, function (Task $taskA, Task $taskB) {
+            return ($taskA->getPriority() < $taskB->getPriority()) ? 1 : -1;
+        });
         return $this->tasks;
     }
 }
