@@ -10,7 +10,7 @@ class StoreRequest extends AuthRequest implements CreateProjectRequest
     public function rules()
     {
         return [
-            'name' => 'required|string',
+            'name' => 'required|string|max:255',
         ];
     }
 

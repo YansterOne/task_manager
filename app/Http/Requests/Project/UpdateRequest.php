@@ -10,7 +10,7 @@ class UpdateRequest extends AuthRequest implements UpdateProjectRequest
     public function rules()
     {
         return [
-            'name' => 'required|string'
+            'name' => 'required|string|max:255',
         ];
     }
 

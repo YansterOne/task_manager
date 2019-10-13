@@ -16,8 +16,8 @@ class StoreRequest extends AuthRequest implements AddTaskRequest
     {
         return [
             'project_id' => 'required|integer',
-            'name' => 'required|string',
-            'status' => 'required|string',
+            'name' => 'required|string|max:255',
+            'status' => 'required|string|max:255',
             'priority' => 'required|integer',
             'deadline' => 'sometimes|nullable|date',
         ];
