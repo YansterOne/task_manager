@@ -2,6 +2,8 @@
 
 namespace Core\Task;
 
+use Core\Project\Project;
+
 interface TaskRepository
 {
     public function create(Task $task): int;
@@ -11,4 +13,6 @@ interface TaskRepository
     public function update(Task $task);
 
     public function delete(Task $task);
+
+    public function getForProject(Project $project): array;
 }

@@ -2,6 +2,7 @@
 
 namespace Fake\Task;
 
+use Core\Project\Project;
 use Core\Task\Task;
 use Core\Task\TaskRepository;
 
@@ -42,5 +43,12 @@ class FakeTaskRepository implements TaskRepository
     public function delete(Task $task)
     {
         unset($this->tasks[$task->getId()]);
+    }
+
+    public function getForProject(Project $project): array
+    {
+        return array_filter($this->tasks, function (Task $task) use ($project) {
+           return $task->getProject()->getId() === $project->getId();
+        });
     }
 }

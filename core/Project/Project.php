@@ -3,6 +3,7 @@
 namespace Core\Project;
 
 use Core\Entity;
+use Core\Task\Task;
 use Core\User\User;
 
 class Project extends Entity
@@ -16,6 +17,8 @@ class Project extends Entity
      * @var User
      */
     private $user;
+
+    private $tasks = [];
 
     public function __construct(string $name, User $user)
     {
@@ -42,5 +45,16 @@ class Project extends Entity
     public function hasPermissions(User $user): bool
     {
         return $this->user->getId() === $user->getId();
+    }
+
+    public function addTask(Task $task): self
+    {
+        $this->tasks[] = $task;
+        return $this;
+    }
+
+    public function getTasks(): array
+    {
+        return $this->tasks;
     }
 }

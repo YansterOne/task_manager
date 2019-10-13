@@ -16,6 +16,7 @@ use Fake\Project\Requests\FakeUpdateProjectRequest;
 use Fake\Project\Responses\FakeCreateProjectResponse;
 use Fake\Project\Responses\FakeGetProjectsResponse;
 use Fake\Project\Responses\FakeUpdateProjectResponse;
+use Fake\Task\FakeTaskRepository;
 use Fake\User\FakeUserRepository;
 use Faker\Provider\Lorem;
 use Tests\TestCase;
@@ -26,14 +27,16 @@ class ProjectServiceTest extends TestCase
     private $projectFactory;
     private $projectService;
     private $userRepository;
+    private $taskRepository;
 
     public function setUp(): void
     {
         $this->userRepository = new FakeUserRepository();
         $this->projectRepository = new FakeProjectRepository();
         $this->projectFactory = new ProjectFactory();
+        $this->taskRepository = new FakeTaskRepository();
         $this->projectService = new ProjectService($this->projectRepository, $this->projectFactory,
-            $this->userRepository);
+            $this->userRepository, $this->taskRepository);
     }
 
     private function createAndSaveUser(): User

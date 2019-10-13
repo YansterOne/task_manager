@@ -11,6 +11,8 @@ use Core\Project\Requests\UpdateProjectRequest;
 use Core\Project\Responses\CreateProjectResponse;
 use Core\Project\Responses\GetProjectsResponse;
 use Core\Project\Responses\UpdateProjectResponse;
+use Core\Task\Task;
+use Core\Task\TaskRepository;
 use Core\User\UserRepository;
 
 class ProjectService
@@ -18,15 +20,18 @@ class ProjectService
     private $projectRepository;
     private $projectFactory;
     private $userRepository;
+    private $taskRepository;
 
     public function __construct(
         ProjectRepository $projectRepository,
         ProjectFactory $projectFactory,
-        UserRepository $userRepository
+        UserRepository $userRepository,
+        TaskRepository $taskRepository
     ) {
         $this->projectRepository = $projectRepository;
         $this->userRepository = $userRepository;
         $this->projectFactory = $projectFactory;
+        $this->taskRepository = $taskRepository;
     }
 
     public function createProject(CreateProjectRequest $request, CreateProjectResponse $response)
@@ -41,6 +46,15 @@ class ProjectService
     public function getProjects(GetProjectsRequest $request, GetProjectsResponse $response)
     {
         $projects = $this->projectRepository->getForUser($request->getAuthUser()->getId());
+        /**
+         * @var Project $project
+         */
+        foreach ($projects as $project) {
+            $tasks = $this->taskRepository->getForProject($project);
+            foreach ($tasks as $task) {
+                $project->addTask($task);
+            }
+        }
         $response->setProjects($projects);
     }
 

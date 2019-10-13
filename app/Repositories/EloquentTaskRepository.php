@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use Core\Project\Project;
 use Core\Project\ProjectFactory;
 use Core\Task\Task;
 use Core\Task\TaskFactory;
@@ -57,6 +58,30 @@ class EloquentTaskRepository implements TaskRepository
         if (!$dbTask) {
             return null;
         }
+        $task = $this->createTaskFromDBTask($dbTask);
+        return $task;
+    }
+
+    public function update(Task $task)
+    {
+        DBTask::query()->where('id', $task->getId())->update([
+            'name' => $task->getName(),
+            'status' => $task->getName(),
+            'priority' => $task->getPriority(),
+            'deadline' => $task->getDeadline(),
+        ]);
+    }
+
+    public function getForProject(Project $project): array
+    {
+        $dbTasks = DBTask::query()->where('project_id', $project->getId())->get();
+        return $dbTasks->map(function (DBTask $task) {
+            return $this->createTaskFromDBTask($task);
+        })->toArray();
+    }
+
+    private function createTaskFromDBTask(DBTask $dbTask): Task
+    {
         $dbTaskUser = $dbTask->getUser();
         $user = $this->userFactory->create($dbTaskUser->getUsername(), $dbTaskUser->getPassword(),
             $dbTaskUser->getApiToken(), $dbTaskUser->getId());
@@ -69,15 +94,5 @@ class EloquentTaskRepository implements TaskRepository
             $user);
         $task->setId($dbTask->getId());
         return $task;
-    }
-
-    public function update(Task $task)
-    {
-        DBTask::query()->where('id', $task->getId())->update([
-            'name' => $task->getName(),
-            'status' => $task->getName(),
-            'priority' => $task->getPriority(),
-            'deadline' => $task->getDeadline(),
-        ]);
     }
 }
