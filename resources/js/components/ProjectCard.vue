@@ -22,7 +22,7 @@
             <task-add :project-id="id" @create="addTask"></task-add>
             <v-divider></v-divider>
             <v-list v-if="tasks" class="project-card__task-list">
-                <task-item v-for="(task, index) in tasks" :key="index"
+                <task-item v-for="(task, index) in tasks" :key="task.id"
                            :id="task.id" :name="task.name" :project-id="task.project_id"
                            :status="task.status" :deadline="task.deadline" :priority="task.priority"
                            @update="updateTask(index, $event)" @delete="deleteTask(index)"

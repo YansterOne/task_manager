@@ -2,7 +2,7 @@
     <div class="projects">
         <div class="projects__list">
             <project-card v-for="(project, index) in projects" :name="project.name" :id="project.id"
-                          :tasks="project.tasks" :key="index" @update="updateProject(index, $event)"
+                          :tasks="project.tasks" :key="keyForProject(project)" @update="updateProject(index, $event)"
                           @delete="deleteProject(index)"
             ></project-card>
         </div>
@@ -13,12 +13,19 @@
 </template>
 
 <script>
+  import uuid from 'uuid';
+
   export default {
     name: 'ProjectsPage',
     data() {
       return {
         projects: [],
       };
+    },
+    computed: {
+      keyForProject() {
+        return (project) => project.id ? project.id : project.key;
+      },
     },
     mounted() {
       this.loadProjects();
@@ -32,7 +39,7 @@
         });
       },
       addProject() {
-        this.projects.push({name: ''});
+        this.projects.push({name: '', key: uuid()});
       },
       updateProject(index, data) {
         this.$set(this.projects, index, data);
