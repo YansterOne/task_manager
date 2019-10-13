@@ -1,5 +1,6 @@
 <template>
     <v-app>
+        <app-header v-if="isAuthorized"></app-header>
         <login-page v-if="!isAuthorized"></login-page>
         <projects-page v-else></projects-page>
     </v-app>

@@ -1,0 +1,29 @@
+.app-header {
+    height: 50px;
+    background-color: $primary;
+    color: white;
+
+    &#{__container} {
+        padding-top: 0;
+        padding-bottom: 0;
+        height: 100%;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        max-width: 880px;
+    }
+
+    &#{__link} {
+        height: 100%;
+        padding: 0 20px;
+        display: flex;
+        align-items: center;
+        transition: 0.3s ease-in-out;
+
+        &:hover {
+            text-decoration: underline;
+            cursor: pointer;
+            background-color: darken($primary, 20%);
+        }
+    }
+}

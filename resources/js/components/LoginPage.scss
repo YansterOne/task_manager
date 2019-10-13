@@ -6,7 +6,7 @@
     align-items: center;
 
     &#{__form} {
-        border: 2px solid black;
+        border: 2px solid $primary;
         padding: 20px;
         border-radius: 5px;
     }
