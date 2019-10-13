@@ -1,6 +1,15 @@
 @import url('https://fonts.googleapis.com/css?family=Nunito');
 @import '~@mdi/font/css/materialdesignicons.css';
 @import 'variables';
+
 body {
     font-family: $font-family-sans-serif;
+}
+
+.fade-enter-active, .fade-leave-active {
+    transition: opacity .3s;
+}
+
+.fade-enter, .fade-leave-to {
+    opacity: 0;
 }
