@@ -40,7 +40,7 @@ class UserServiceTest extends TestCase
     public function testLoginSuccess()
     {
         $creds = $this->fakeCredentials();
-        $user = $this->userFactory->create($creds['username'], $creds['password']);
+        $user = $this->userFactory->create($creds['username'], $creds['password'], null, null, true);
         $this->userRepository->create($user);
         $loginRequest = new FakeLoginUserRequest($creds['username'], $creds['password']);
         $loginResponse = new FakeLoginUserResponse();
