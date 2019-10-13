@@ -1,0 +1,26 @@
+.project-card {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    width: 100%;
+
+    &#{__header} {
+        display: flex;
+        align-items: center;
+        flex-wrap: nowrap;
+        background-color: $secondary;
+        height: 94px;
+    }
+
+    &#{__edit}, &#{__title} {
+        flex: 1 1 auto;
+        margin-right: 20px;
+    }
+
+    &#{__controls} {
+        margin-left: auto;
+    }
+
+    &#{__task-list} {
+        padding: 0;
+    }
+}

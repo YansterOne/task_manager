@@ -1,0 +1,17 @@
+.task-item {
+    height: 94px;
+    transition: 0.3s ease-in-out;
+    cursor: move;
+
+    &:hover {
+        background-color: darken(white, 5%);
+    }
+
+    &:not(:first-of-type) {
+        border-top: 1px solid rgba(0, 0, 0, 0.12);
+    }
+
+    &#{__content} {
+        margin-right: 20px;
+    }
+}

@@ -13,6 +13,20 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group(['namespace' => 'Api'], function () {
+    Route::post('login', 'LoginController@login');
+
+    Route::group(['prefix' => 'projects', 'as' => 'projects.'], function () {
+        Route::get('', 'ProjectController@get');
+        Route::post('', 'ProjectController@store');
+        Route::put('{id}', 'ProjectController@update');
+        Route::delete('{id}', 'ProjectController@delete');
+    });
+
+    Route::group(['prefix' => 'tasks', 'as' => 'tasks.'], function () {
+        Route::post('', 'TaskController@store');
+        Route::put('{id}', 'TaskController@update');
+        Route::delete('{id}', 'TaskController@delete');
+    });
 });
+

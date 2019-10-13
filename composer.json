@@ -29,7 +29,9 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "app/"
+            "App\\": "app/",
+            "Core\\": "core/",
+            "Fake\\": "fake/"
         },
         "classmap": [
             "database/seeds",
