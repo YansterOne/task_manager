@@ -23,7 +23,7 @@
             <v-divider></v-divider>
             <v-list v-if="tasks" class="project-card__task-list">
                 <draggable v-model="editTasks" @end="dragEnd">
-                    <transition-group name="fade">
+                    <transition-group name="fade" mode="out-in">
                         <task-item v-for="(task, index) in editTasks" :key="task.id"
                                    :id="task.id" :name="task.name" :project-id="task.project_id"
                                    :status="task.status" :deadline="task.deadline" :priority="task.priority"
