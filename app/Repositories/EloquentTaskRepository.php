@@ -36,7 +36,7 @@ class EloquentTaskRepository implements TaskRepository
     {
         $dbTask = DBTask::query()->create([
             'name' => $task->getName(),
-            'status' => $task->getName(),
+            'status' => $task->getStatus(),
             'priority' => $task->getPriority(),
             'deadline' => $task->getDeadline(),
             'project_id' => $task->getProject()->getId(),
